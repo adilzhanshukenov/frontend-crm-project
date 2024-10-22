@@ -1,0 +1,16 @@
+.login-wrapper {
+    text-align: center;
+}
+
+.login-form{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 200px;
+    text-align: center;
+    margin: 0 auto;
+}
+
+.project-title {
+    font-size: 32px;
+}

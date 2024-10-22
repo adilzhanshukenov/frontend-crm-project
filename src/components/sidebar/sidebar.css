@@ -1,0 +1,25 @@
+.sidebar {
+    padding: 20px;
+    width: 200px;
+    border-right: 1px solid white;
+}
+
+.sidebar-list {
+    list-style: none;
+    padding: 0;
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%; /* Sidebar takes full width on mobile */
+    }
+
+    ul {
+        display: flex;
+        justify-content: space-evenly;
+    }
+
+    li {
+        display: inline-block;
+    }
+}

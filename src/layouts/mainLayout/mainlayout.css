@@ -1,0 +1,22 @@
+.layout {
+    display: flex;  
+    flex-direction: column; /* Arrange header, content-area, and footer vertically */  
+    min-height: 100vh; /* Full viewport height */
+}
+
+.content-area {
+    display: flex; /* Arrange sidebar and main content side by side */  
+    flex: 1; /* Take up remaining space between header and footer */
+    width: 100vw;
+}
+
+.main-content {
+    flex: 1; /* Take up the remaining space */  
+    padding: 20px;
+}
+
+@media (max-width: 768px) {
+    .content-area {
+      flex-direction: column; /* Stack sidebar above main content */
+    }
+}

@@ -1,0 +1,17 @@
+.header {
+    text-align: center;
+    border-bottom: 1px solid white;
+    height: 60px;
+    width: 100vw;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-header {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    list-style: none;
+}
