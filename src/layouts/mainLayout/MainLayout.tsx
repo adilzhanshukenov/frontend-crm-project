@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
-import Footer from "../../components/footer/Footer";
-import Header from "../../components/header/Header";
-import Sidebar from "../../components/sidebar/Sidebar";
+import Footer from "../../components/shared/footer/Footer";
+import Header from "../../components/shared/header/Header";
+import Sidebar from "../../components/shared/sidebar/Sidebar";
 import './mainlayout.css'
 
 // interface MainLayoutProps {

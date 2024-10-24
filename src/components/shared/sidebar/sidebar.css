@@ -1,6 +1,6 @@
 .sidebar {
-    padding: 20px;
     width: 200px;
+    padding: 20px;
     border-right: 1px solid white;
 }
 
@@ -12,6 +12,7 @@
 @media (max-width: 768px) {
     .sidebar {
         width: 100%; /* Sidebar takes full width on mobile */
+        border-right: none;
     }
 
     ul {

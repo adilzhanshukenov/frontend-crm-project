@@ -1,10 +1,9 @@
 import {useState, useEffect} from 'react'
-import { getAllUsers, getUserProfile, UserProfile } from '../../services/auth'
+import { getAllUsers, UserProfile } from '../../services/auth'
 import { useNavigate } from 'react-router-dom';
 
 
 const Dashboard: React.FC = () => {
-    const [user, setUser] = useState<UserProfile | null>(null)
     const [users, setUsers] = useState<UserProfile[] | null>(null)
     const [error, setError] = useState<string | null>(null);
 
@@ -24,7 +23,7 @@ const Dashboard: React.FC = () => {
                 console.log(response)
                 setUsers(response.data)
             } catch(err) {
-                setError('Failed to fetch user profile.')
+                setError(err.message)
                 localStorage.removeItem('token'); // remove invalid token
                 navigate('auth/login'); //navigate to login page
             }
@@ -36,10 +35,6 @@ const Dashboard: React.FC = () => {
 
     if(error) {
         <div>{error}</div>
-    }
-
-    if(!user) {
-        <div>Loading...</div>
     }
 
     return(

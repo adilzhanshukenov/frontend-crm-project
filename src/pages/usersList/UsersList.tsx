@@ -8,20 +8,17 @@ const UsersList = observer(() => {
     } ,[]);
 
     const usersList = (
-        <div>
             <ul>
                 {userStore.users?.map(user => (
-                <li >
+                <li key={user._id}>
                     {user.username} ({user.email})
                 </li>
                 ))}
             </ul>
-         </div>
     )
 
     return (
         <div>
-            <h1>List of Users</h1>
             {usersList}
         </div>
     )

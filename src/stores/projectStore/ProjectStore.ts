@@ -1,4 +1,4 @@
-import { makeAutoObservable, observable } from "mobx"
+import { action, makeAutoObservable, observable } from "mobx"
 import { Project } from "./types"
 import axiosInstance from "../../utils/axiosInstance";
 
@@ -11,7 +11,8 @@ class ProjectStore {
 
     constructor() { makeAutoObservable(this) }
 
-    async fetchProjectsOfCompany(company: string) {
+    @action
+    fetchProjectsOfCompany = async (company: string) => {
         this.loading = true;
         this.error = null;
 
