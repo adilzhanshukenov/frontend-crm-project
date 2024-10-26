@@ -3,7 +3,12 @@
     flex-direction: column;
     flex: 2;
     gap: 5px;
-    justify-content: center;
-    justify-items: center;
-    align-items: center;
+    justify-content: start;
+}
+
+.company-form-inputs {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    padding-bottom: 5px;
 }

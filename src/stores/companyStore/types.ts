@@ -1,10 +1,9 @@
 export interface Company {
+  _id?: string;
 
-    _id?: string;
+  name: string;
 
-    name: string;
+  address: string;
 
-    address: string;
-
-    industry: string;
+  industry: string;
 }

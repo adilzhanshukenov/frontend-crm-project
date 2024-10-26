@@ -21,7 +21,7 @@
     flex-direction: column;
   }
   
-  .modal-content button {
+  .close-button {
     border: none;
     font-size: 16px;
     cursor: pointer;

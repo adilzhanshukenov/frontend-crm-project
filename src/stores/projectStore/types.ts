@@ -1,17 +1,15 @@
 import { Company } from "../companyStore/types";
 
 export interface Project {
+  name: string;
 
-    name: string;
+  description: string;
 
-    description: string;
+  start_date: Date;
 
-    start_date: Date;
+  end_date: Date;
 
-    end_date: Date;
+  status: string;
 
-    status: string;
-
-    company: Company;
-
+  company: Company;
 }
