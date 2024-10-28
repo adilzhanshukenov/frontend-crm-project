@@ -1,6 +1,8 @@
-import { Company } from "../companyStore/types";
+import { Company } from '../companyStore/types';
 
 export interface Project {
+  _id?: string;
+
   name: string;
 
   description: string;

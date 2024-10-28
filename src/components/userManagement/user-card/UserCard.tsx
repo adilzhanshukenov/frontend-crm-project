@@ -1,18 +1,18 @@
 import { FormEvent } from 'react';
-import { Company } from '../../../stores/companyStore/types';
+import { User } from '../../../stores/userStore/types';
 import Button from '../../shared/button/Button';
-import './companycard.css';
+import './usercard.css';
 
-interface CompanyCardProps {
-  company: Company;
+interface UserCardProps {
+  user: User;
   onEdit: () => void;
   onDelete: () => void;
 }
 
-const CompanyCard: React.FC<CompanyCardProps> = ({ company, onEdit, onDelete }) => {
+const UserCard: React.FC<UserCardProps> = ({ user, onEdit, onDelete }) => {
   return (
-    <div className="company-card">
-      <p>{company.name}</p>
+    <div className="user-card">
+      <p>{user.username}</p>
       <div>
         <Button
           title="Edit"
@@ -21,7 +21,6 @@ const CompanyCard: React.FC<CompanyCardProps> = ({ company, onEdit, onDelete }) 
             onEdit();
           }}
         />
-
         <Button
           title="Delete"
           onClick={(e) => {
@@ -34,4 +33,4 @@ const CompanyCard: React.FC<CompanyCardProps> = ({ company, onEdit, onDelete }) 
   );
 };
 
-export default CompanyCard;
+export default UserCard;

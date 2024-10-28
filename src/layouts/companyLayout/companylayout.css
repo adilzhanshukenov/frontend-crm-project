@@ -1,0 +1,12 @@
+.company-layout {
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.company-content {
+    flex: 1;
+    /* Take up the remaining space */
+    padding: 20px;
+}

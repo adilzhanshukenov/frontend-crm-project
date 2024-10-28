@@ -1,18 +1,19 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useNavigate } from 'react-router-dom';
-import { companyStore } from '../../stores/companyStore/CompanyStore';
-import Modal from '../../components/shared/modal/Modal';
-import CompanyCard from '../../components/companyManagement/company-card/CompanyCard';
-import { CreateCompanyForm } from '../../components/companyManagement/create-company-form/CreateCompanyForm';
-import { modalStore } from '../../stores/modalStore/ModalStore';
 import './companylist.css';
+import { CreateCompanyForm } from '../../components/companyManagement/create-company-form/CreateCompanyForm';
 import HeaderTitle from '../../components/shared/header-title/HeaderTitle';
+import CompanyCard from '../../components/companyManagement/company-card/CompanyCard';
+import Modal from '../../components/shared/modal/Modal';
+import { companyStore } from '../../stores/companyStore/CompanyStore';
+import { modalStore } from '../../stores/modalStore/ModalStore';
+import { Company } from '../../stores/companyStore/types';
+import Button from '../../components/shared/button/Button';
+import ConfirmationModal from '../../components/shared/confirmation-modal/ConfirmationModal';
 
 const CompanyList: React.FC = observer(() => {
-  const handleOpenModal = () => {
-    modalStore.openModal();
-  };
+  const [companyToDelete, setCompanyToDelete] = useState<Company | null>(null);
 
   useEffect(() => {
     companyStore.fetchAllCompanies();
@@ -20,8 +21,46 @@ const CompanyList: React.FC = observer(() => {
 
   const navigate = useNavigate();
 
-  const handleCompanyClick = (companyId: string | undefined) => {
-    navigate(`${companyId}/projects`);
+  const handleOpenModalForCreate = () => {
+    modalStore.openModalForCreateCompany();
+  };
+
+  const openDeleteConfirmation = (company: Company | null) => {
+    setCompanyToDelete(company);
+  };
+
+  const handleConfirmDelete = () => {
+    if (companyToDelete !== null) {
+      companyStore.deleteCompany(companyToDelete);
+      setCompanyToDelete(null);
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setCompanyToDelete(null);
+  };
+
+  const handleFormSubmit = async (companyData: Company) => {
+    if (modalStore.mode === 'edit') {
+      await companyStore.updateCompany(companyData);
+    } else {
+      await companyStore.createNewCompany(companyData);
+    }
+    companyStore.fetchAllCompanies();
+    modalStore.closeModal();
+  };
+
+  if (companyStore.loading) return <p>Loading...</p>;
+  if (companyStore.error) return <p>Error: {companyStore.error}</p>;
+
+  //   const handleDelete = async (companyId: string | undefined) => {
+  //     await companyStore.deleteCompany(companyId);
+  //     companyStore.fetchAllCompanies();
+  //   };
+
+  const handleCompanyClick = (company: Company) => {
+    companyStore.setSelectedCompany(company);
+    navigate(`/companies/${company._id}`);
   };
 
   const handleCompanyCreated = () => {
@@ -34,8 +73,14 @@ const CompanyList: React.FC = observer(() => {
     <div>
       <ul className="list-style">
         {companyStore.companyList?.map((company) => (
-          <li key={company._id} onClick={() => handleCompanyClick(company._id)}>
-            <CompanyCard company={company} />
+          <li key={company._id} onClick={() => handleCompanyClick(company)}>
+            <CompanyCard
+              onEdit={() => {
+                modalStore.openModalForEditCompany(company);
+              }}
+              onDelete={() => openDeleteConfirmation(company)}
+              company={company}
+            />
           </li>
         ))}
       </ul>
@@ -46,13 +91,25 @@ const CompanyList: React.FC = observer(() => {
     <div>
       <div className="company-title-area">
         <HeaderTitle title="Company List" />
-        <button onClick={handleOpenModal}>Create New Company</button>
+        <Button title="Create Company" onClick={handleOpenModalForCreate} />
       </div>
 
-      <Modal title="Create Company">
-        <CreateCompanyForm handleClose={handleCompanyCreated} />
-      </Modal>
       {companyList}
+
+      <Modal>
+        <CreateCompanyForm
+          company={modalStore.currectCompany}
+          onSubmit={handleFormSubmit}
+          handleClose={handleCompanyCreated}
+        />
+      </Modal>
+      {companyToDelete !== null && (
+        <ConfirmationModal
+          message="Are you sure you want to delete this company?"
+          onConfirm={handleConfirmDelete}
+          onCancel={handleCancelDelete}
+        />
+      )}
     </div>
   );
 });

@@ -1,14 +1,10 @@
-li {
+.user-card {
     width: 100%;
-}
-
-.company-card {
     border: 1px solid white;
-    border-radius: 5px;
-    cursor: pointer;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
     padding: 5px;
+    border-radius: 5px;
 }

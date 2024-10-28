@@ -7,3 +7,11 @@ export interface Company {
 
   industry: string;
 }
+
+export interface CompanyFormData {
+  name: string;
+
+  address: string;
+
+  industry: string;
+}

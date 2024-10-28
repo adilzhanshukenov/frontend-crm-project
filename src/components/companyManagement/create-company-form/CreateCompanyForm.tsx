@@ -1,53 +1,59 @@
-import React, { useState } from 'react';
-import { companyStore } from '../../../stores/companyStore/CompanyStore';
-import { Company } from '../../../stores/companyStore/types';
+import React, { useEffect, useState } from 'react';
+import { Company, CompanyFormData } from '../../../stores/companyStore/types';
 import { userStore } from '../../../stores/userStore/UserStore';
 import './createcompanyform.css';
 
-interface CreateCompanyFormProps {
+interface CompanyFormProps {
+  company?: Company | null;
+  onSubmit: (companyData: Company) => void;
   handleClose: () => void; // Called after user creation to close modal and refetch users
 }
 
-export const CreateCompanyForm: React.FC<CreateCompanyFormProps> = ({ handleClose }) => {
-  const [name, setName] = useState('');
-  const [address, setAddress] = useState('');
-  const [industry, setIndustry] = useState('');
+export const CreateCompanyForm: React.FC<CompanyFormProps> = ({ company, onSubmit, handleClose }) => {
+  const [formData, setFormData] = useState<CompanyFormData>({ name: '', address: '', industry: '' });
 
-  const companyData: Company = { name, address, industry };
+  useEffect(() => {
+    if (company) {
+      setFormData({
+        name: company.name,
+        address: company.address,
+        industry: company.industry,
+      });
+    }
+  }, [company]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Simulate API call
-    setTimeout(() => {
-      companyStore.createNewCompany(companyData);
-
-      handleClose();
-      // Optionally reset form state
-      setName('');
-      setAddress('');
-      setIndustry('');
-    }, 500);
-
-    console.log({ name, address, industry });
+    const companyData = company ? { ...company, ...formData } : { ...formData };
+    onSubmit(companyData);
   };
 
   return (
     <form className="create-company-form" onSubmit={handleSubmit}>
+      <h2>{company ? 'Update company' : 'Create company'}</h2>
       <div className="company-form-inputs">
         <label>Name:</label>
-        <input type="text" value={name} onChange={(e) => setName(e.target.value)} required />
+        <input type="text" name="name" value={formData.name} onChange={handleChange} required />
       </div>
       <div className="company-form-inputs">
         <label>Address:</label>
-        <input type="text" value={address} onChange={(e) => setAddress(e.target.value)} required />
+        <input type="text" name="address" value={formData.address} onChange={handleChange} required />
       </div>
       <div className="company-form-inputs">
         <label>Industry:</label>
-        <input type="text" value={industry} onChange={(e) => setIndustry(e.target.value)} required />
+        <input type="text" name="industry" value={formData.industry} onChange={handleChange} required />
       </div>
       <button type="submit" disabled={userStore.loading}>
-        {userStore.loading ? 'Creating Company' : 'Create Company'}
+        {company ? 'Update' : 'Create'}
+      </button>
+      <button type="button" onClick={handleClose}>
+        Cancel
       </button>
     </form>
   );
