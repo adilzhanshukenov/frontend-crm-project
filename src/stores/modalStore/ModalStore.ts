@@ -13,6 +13,11 @@ class ModalStore {
   }
 
   @action
+  openModal = () => {
+    this.isOpen = true;
+  };
+
+  @action
   openModalForCreateCompany = () => {
     this.isOpen = true;
     this.mode = 'create';

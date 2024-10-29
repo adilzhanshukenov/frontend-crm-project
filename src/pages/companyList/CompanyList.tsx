@@ -63,6 +63,10 @@ const CompanyList: React.FC = observer(() => {
     navigate(`/companies/${company._id}`);
   };
 
+  const handleCompanySettingsClick = (company: Company) => {
+    navigate(`/companies/${company._id}/settings`);
+  };
+
   const handleCompanyCreated = () => {
     companyStore.fetchAllCompanies();
     modalStore.closeModal();
@@ -75,6 +79,9 @@ const CompanyList: React.FC = observer(() => {
         {companyStore.companyList?.map((company) => (
           <li key={company._id} onClick={() => handleCompanyClick(company)}>
             <CompanyCard
+              onSettings={() => {
+                handleCompanySettingsClick(company);
+              }}
               onEdit={() => {
                 modalStore.openModalForEditCompany(company);
               }}

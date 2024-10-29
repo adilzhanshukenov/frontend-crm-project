@@ -9,6 +9,7 @@ import CompanyList from './pages/companyList/CompanyList';
 import ProjectList from './pages/projectList/ProjectList';
 import CompanyLayout from './layouts/companyLayout/CompanyLayout';
 import ProjectPage from './pages/projectPage/ProjectPage';
+import CompanySettings from './pages/companySettings/CompanySettings';
 
 const router = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
       {
         path: 'companies/:companyId/projects',
         element: <ProjectList />,
+      },
+      {
+        path: 'companies/:companyId/settings',
+        element: <CompanySettings />,
       },
     ],
   },

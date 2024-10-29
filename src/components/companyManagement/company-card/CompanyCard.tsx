@@ -7,13 +7,21 @@ interface CompanyCardProps {
   company: Company;
   onEdit: () => void;
   onDelete: () => void;
+  onSettings: () => void;
 }
 
-const CompanyCard: React.FC<CompanyCardProps> = ({ company, onEdit, onDelete }) => {
+const CompanyCard: React.FC<CompanyCardProps> = ({ company, onSettings, onEdit, onDelete }) => {
   return (
     <div className="company-card">
       <p>{company.name}</p>
       <div>
+        <Button
+          title="Settings"
+          onClick={(e: FormEvent) => {
+            e.stopPropagation();
+            onSettings();
+          }}
+        />
         <Button
           title="Edit"
           onClick={(e: FormEvent) => {

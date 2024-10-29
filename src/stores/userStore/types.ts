@@ -12,3 +12,9 @@ export interface UserData {
   username: string;
   email: string;
 }
+
+export interface UserCompany {
+  userId: string;
+  companyId: string;
+  role: string;
+}

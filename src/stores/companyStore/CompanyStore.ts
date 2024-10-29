@@ -86,6 +86,25 @@ class CompanyStore {
   };
 
   @action
+  getCompanyById = async (companyId: string | undefined) => {
+    this.loading = true;
+    this.error = null;
+    this.success = false;
+
+    try {
+      const response = await axiosInstance.get<Company>(`/company/${companyId}`);
+      runInAction(() => {
+        this.selectedCompany = response.data;
+      });
+      this.success = true;
+    } catch (error) {
+      this.error = error.message;
+    } finally {
+      this.loading = false;
+    }
+  };
+
+  @action
   setSelectedCompany = (company: Company) => {
     this.selectedCompany = company;
   };

@@ -1,0 +1,7 @@
+.user-company-form {
+    display: flex;
+    flex-direction: column;
+    flex: 2;
+    gap: 5px;
+    justify-content: start;
+}

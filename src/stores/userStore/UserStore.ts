@@ -1,10 +1,11 @@
 import { action, makeAutoObservable, observable, runInAction } from 'mobx';
-import { User, UserData } from './types';
+import { User, UserCompany, UserData } from './types';
 import axiosInstance from '../../utils/axiosInstance';
 
 class UserStore {
   @observable users: User[] = [];
-  @observable selectedUser: User | null = null;
+  @observable userCompany: UserCompany[] = [];
+  @observable selectedUser: string = '';
   @observable loading: boolean = false;
   @observable error: string | null = null;
   @observable success: boolean = false;
@@ -12,6 +13,11 @@ class UserStore {
   constructor() {
     makeAutoObservable(this);
   }
+
+  @action
+  setSelectedUser = async (user: string) => {
+    this.selectedUser = user;
+  };
 
   //load all users
   @action
@@ -23,6 +29,26 @@ class UserStore {
     try {
       const response = await axiosInstance.get<User[]>(`/user`);
       this.users = response.data;
+      this.success = true;
+    } catch (error) {
+      this.error = error.message;
+    } finally {
+      this.loading = false;
+    }
+  };
+
+  //load all users
+  @action
+  fetchAllUsersOfCompany = async (companyId: string | undefined) => {
+    this.loading = true;
+    this.error = null;
+    this.success = false;
+    try {
+      const response = await axiosInstance.get<UserCompany[]>(`/user-company/${companyId}`);
+      console.log(response.data);
+      runInAction(() => {
+        this.userCompany = response.data;
+      });
       this.success = true;
     } catch (error) {
       this.error = error.message;
@@ -77,6 +103,24 @@ class UserStore {
       this.success = true;
     } catch (error) {
       this.error = error.message;
+    } finally {
+      this.loading = false;
+    }
+  };
+
+  @action
+  assignUserToCompany = async (userCompany: UserCompany) => {
+    this.loading = true;
+    this.error = null;
+    this.success = false;
+
+    try {
+      console.log('whaat?');
+      await axiosInstance.post(`/user-company`, userCompany);
+
+      this.success = true;
+    } catch (error) {
+      this.error = error;
     } finally {
       this.loading = false;
     }

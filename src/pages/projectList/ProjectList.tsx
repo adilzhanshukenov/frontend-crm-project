@@ -24,8 +24,8 @@ const ProjectList: React.FC = observer(() => {
   }
 
   const handleProjectClick = (project: Project) => {
-    projectStore.setSelectedProject(project);
     navigate(`project/${project._id}`);
+    projectStore.setSelectedProject(project);
   };
 
   return (
