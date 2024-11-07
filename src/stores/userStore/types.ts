@@ -14,7 +14,7 @@ export interface UserData {
 }
 
 export interface UserCompany {
-  userId: string;
-  companyId: string;
-  role: string;
+  user: any;
+  company: any;
+  position: string;
 }

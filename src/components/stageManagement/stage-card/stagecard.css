@@ -1,0 +1,9 @@
+.stage-card {
+    border: 1px solid white;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px;
+}

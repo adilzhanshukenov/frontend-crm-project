@@ -7,7 +7,9 @@ interface ModalProps {
 }
 
 const Modal: React.FC<ModalProps> = observer(({ children }) => {
-  if (!modalStore.isOpen) return null;
+  if (!modalStore.activeModal) return null; // Do not render if no modal is active
+
+  //if (!modalStore.isOpen) return null;
 
   return (
     <div className="modal">

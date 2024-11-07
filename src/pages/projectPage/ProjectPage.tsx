@@ -1,14 +1,12 @@
 import { observer } from 'mobx-react-lite';
-import { projectStore } from '../../stores/projectStore/ProjectStore';
-import { Project } from '../../stores/projectStore/types';
+import ProjectHeader from '../../components/projectManagement/proejct-header/ProjectHeader';
+import ProjectBar from '../../components/projectManagement/project-bar/ProjectBar';
 
 const ProjectPage: React.FC = observer(() => {
-  const project: Project | null = projectStore.selectedProject;
-
   return (
     <div>
-      <p>{project?.name}</p>
-      HELLo
+      <ProjectHeader />
+      <ProjectBar />
     </div>
   );
 });

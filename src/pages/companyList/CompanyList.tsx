@@ -22,7 +22,12 @@ const CompanyList: React.FC = observer(() => {
   const navigate = useNavigate();
 
   const handleOpenModalForCreate = () => {
-    modalStore.openModalForCreateCompany();
+    modalStore.currectCompany = null;
+    modalStore.openAnyModal({ mode: 'create', activeModal: 'createEditCompany' });
+  };
+
+  const handleOpenModalForEdit = () => {
+    modalStore.openAnyModal({ mode: 'edit', activeModal: 'createEditCompany' });
   };
 
   const openDeleteConfirmation = (company: Company | null) => {
@@ -83,7 +88,8 @@ const CompanyList: React.FC = observer(() => {
                 handleCompanySettingsClick(company);
               }}
               onEdit={() => {
-                modalStore.openModalForEditCompany(company);
+                modalStore.currectCompany = company;
+                handleOpenModalForEdit();
               }}
               onDelete={() => openDeleteConfirmation(company)}
               company={company}
@@ -104,11 +110,13 @@ const CompanyList: React.FC = observer(() => {
       {companyList}
 
       <Modal>
-        <CreateCompanyForm
-          company={modalStore.currectCompany}
-          onSubmit={handleFormSubmit}
-          handleClose={handleCompanyCreated}
-        />
+        {modalStore.activeModal === 'createEditCompany' && (
+          <CreateCompanyForm
+            company={modalStore.currectCompany}
+            onSubmit={handleFormSubmit}
+            handleClose={handleCompanyCreated}
+          />
+        )}
       </Modal>
       {companyToDelete !== null && (
         <ConfirmationModal

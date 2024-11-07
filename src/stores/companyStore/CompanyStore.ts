@@ -1,4 +1,4 @@
-import { action, makeAutoObservable, observable, runInAction } from 'mobx';
+import { action, makeAutoObservable, observable } from 'mobx';
 import { Company, CompanyFormData } from './types';
 import axiosInstance from '../../utils/axiosInstance';
 
@@ -34,6 +34,7 @@ class CompanyStore {
     this.loading = true;
     this.error = null;
     this.success = false;
+
     try {
       await axiosInstance.post<Company>(`/company`, company);
       this.success = true;
@@ -52,11 +53,9 @@ class CompanyStore {
 
     try {
       const response = await axiosInstance.put<Company>(`/company/${updatedCompany._id}`, updatedCompany);
-      runInAction(() => {
-        this.companyList = this.companyList.map((company) =>
-          company._id === updatedCompany._id ? response.data : company,
-        );
-      });
+      this.companyList = this.companyList.map((company) =>
+        company._id === updatedCompany._id ? response.data : company,
+      );
       this.success = true;
     } catch (error) {
       this.error = error.response?.data?.message || 'An error occured.';
@@ -73,13 +72,9 @@ class CompanyStore {
 
     try {
       await axiosInstance.delete(`/company/${deletedCompany?._id}`);
-      runInAction(() => {
-        this.companyList = this.companyList.filter((company) => company._id !== deletedCompany?._id);
-      });
+      this.companyList = this.companyList.filter((company) => company._id !== deletedCompany?._id);
     } catch (error) {
-      runInAction(() => {
-        this.error = error.message;
-      });
+      this.error = error.message;
     } finally {
       this.loading = false;
     }
@@ -93,9 +88,7 @@ class CompanyStore {
 
     try {
       const response = await axiosInstance.get<Company>(`/company/${companyId}`);
-      runInAction(() => {
-        this.selectedCompany = response.data;
-      });
+      this.selectedCompany = response.data;
       this.success = true;
     } catch (error) {
       this.error = error.message;

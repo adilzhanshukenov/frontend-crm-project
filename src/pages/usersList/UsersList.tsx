@@ -58,7 +58,8 @@ const UsersList: React.FC = observer(() => {
           <UserCard
             user={user}
             onEdit={() => {
-              modalStore.openModalForEditUser(user);
+              modalStore.currentUser = user;
+              modalStore.openAnyModal({ mode: 'edit', activeModal: 'createEditUser' });
             }}
             onDelete={() => openDeleteConfirmation(user)}
           />
@@ -76,7 +77,9 @@ const UsersList: React.FC = observer(() => {
       {usersList}
 
       <Modal>
-        <UserForm user={modalStore.currentUser} onSubmit={handleFormSubmit} handleClose={handleUserCreated} />
+        {modalStore.activeModal === 'createEditUser' && (
+          <UserForm user={modalStore.currentUser} onSubmit={handleFormSubmit} handleClose={handleUserCreated} />
+        )}
       </Modal>
       {userToDelete !== null && (
         <ConfirmationModal

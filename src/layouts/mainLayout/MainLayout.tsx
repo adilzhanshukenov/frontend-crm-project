@@ -5,7 +5,7 @@ import './mainlayout.css';
 
 const MainLayout: React.FC = () => {
   return (
-    <div className="layout">
+    <div className="main-layout">
       <Header />
       <div className="content-area">
         <Sidebar />

@@ -22,6 +22,7 @@ const CompanyCard: React.FC<CompanyCardProps> = ({ company, onSettings, onEdit, 
             onSettings();
           }}
         />
+
         <Button
           title="Edit"
           onClick={(e: FormEvent) => {

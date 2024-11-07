@@ -1,0 +1,19 @@
+.project-header {
+    height: 80px;
+    width: 100%;
+    border-bottom: 1px solid white;
+    padding: 20px;
+    display: flex;
+    flex-direction: row;
+
+    justify-content: space-between;
+    align-items: center;
+}
+
+.profile-icons {
+    display: flex;
+    gap: 5px;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+}

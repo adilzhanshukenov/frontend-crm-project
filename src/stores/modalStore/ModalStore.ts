@@ -2,52 +2,47 @@ import { action, makeAutoObservable, observable } from 'mobx';
 import { Company } from '../companyStore/types';
 import { User } from '../userStore/types';
 
+interface ModalProps {
+  mode: 'create' | 'edit' | 'delete';
+  activeModal: string;
+}
+
 class ModalStore {
   @observable isOpen: boolean = false;
   @observable mode: 'create' | 'edit' | 'delete' = 'create';
   @observable currectCompany: Company | null = null;
   @observable currentUser: User | null = null;
 
+  @observable activeModal: string | null = null;
+
   constructor() {
     makeAutoObservable(this);
   }
 
+  /**
+   *
+   * @param modalName
+   */
   @action
-  openModal = () => {
-    this.isOpen = true;
+  openModal = (modalName: string) => {
+    this.activeModal = modalName;
   };
 
-  @action
-  openModalForCreateCompany = () => {
-    this.isOpen = true;
-    this.mode = 'create';
-    this.currectCompany = null;
+  /**
+   *
+   * @param modal
+   */
+  @action openAnyModal = (modal: ModalProps) => {
+    this.activeModal = modal.activeModal;
+    this.mode = modal.mode;
   };
 
-  @action
-  openModalForEditCompany = (company: Company) => {
-    this.isOpen = true;
-    this.mode = 'edit';
-    this.currectCompany = company;
-  };
-
-  @action
-  openModalForCreateUser = () => {
-    this.isOpen = true;
-    this.mode = 'create';
-    this.currentUser = null;
-  };
-
-  @action
-  openModalForEditUser = (user: User) => {
-    this.isOpen = true;
-    this.mode = 'edit';
-    this.currentUser = user;
-  };
-
+  /**
+   * close Modal
+   */
   @action
   closeModal = () => {
-    this.isOpen = false;
+    this.activeModal = null;
   };
 }
 

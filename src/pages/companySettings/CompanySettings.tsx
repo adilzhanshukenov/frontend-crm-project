@@ -6,38 +6,119 @@ import { modalStore } from '../../stores/modalStore/ModalStore';
 import { userStore } from '../../stores/userStore/UserStore';
 import { useParams } from 'react-router-dom';
 import './companysettings.css';
-
-const CompanySettings = () => {
+import { observer } from 'mobx-react-lite';
+import AddPositionCompanyForm from '../../components/positionManagement/add-position-company/AddPositionCompanyForm';
+import PositionCard from '../../components/positionManagement/position-card/PositionCard';
+import AddStageCompanyForm from '../../components/stageManagement/add-stage-company/AddStageCompanyForm';
+import StageCard from '../../components/stageManagement/stage-card/StageCard';
+import { positionStore } from '../../stores/positionStore/PositionStore';
+import { stageStore } from '../../stores/stageStore/StageStore';
+const CompanySettings = observer(() => {
   const { companyId } = useParams<{ companyId: string }>();
 
   useEffect(() => {
-    userStore.fetchAllUsers();
     userStore.fetchAllUsersOfCompany(companyId);
+    positionStore.fetchAllPositions(companyId);
+    stageStore.fetchAllStages(companyId);
   }, [companyId]);
 
-  const getUsernameById = (id: string) => {
-    const user = userStore.users.find((user) => user._id === id);
-    return user ? user.username : 'Unknown User';
+  const userList = (
+    <div>
+      <ul>
+        {userStore.userCompany.map((user) => (
+          <li key={user.user._id}>{user.user.username}</li>
+        ))}
+      </ul>
+    </div>
+  );
+
+  const handleOpenModalForCreatePosition = () => {
+    positionStore.currentPosition = null;
+    modalStore.openAnyModal({ mode: 'create', activeModal: 'createEditPosition' });
   };
+
+  const handleOpenModalForEditPosition = () => {
+    modalStore.openAnyModal({ mode: 'edit', activeModal: 'createEditPosition' });
+  };
+
+  const handleOpenModalForCreateStage = () => {
+    positionStore.currentPosition = null;
+    modalStore.openAnyModal({ mode: 'create', activeModal: 'createEditStage' });
+  };
+
+  const handleOpenModalForEditStage = () => {
+    modalStore.openAnyModal({ mode: 'edit', activeModal: 'createEditStage' });
+  };
+
+  const positionList = (
+    <div>
+      <ul className="list-style">
+        {positionStore.positionList.map((position) => (
+          <li key={position._id}>
+            <PositionCard
+              position={position}
+              onEdit={() => {
+                positionStore.currentPosition = position;
+                handleOpenModalForEditPosition();
+              }}
+            />
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+
+  const stageList = (
+    <div>
+      <ul className="list-style">
+        {stageStore.stageList.map((stage) => (
+          <li key={stage._id}>
+            <StageCard
+              stage={stage}
+              onEdit={() => {
+                stageStore.currentStage = stage;
+                handleOpenModalForEditStage();
+              }}
+            />
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 
   return (
     <div className="company-settings">
       <h1> Settings </h1>
-      <h2>Users of company</h2>
-      <div className="users-company">
-        <ul>
-          {userStore.userCompany.map((user) => (
-            <li key={user.userId}>{getUsernameById(user.userId)}</li>
-          ))}
-        </ul>
-        <Button title="Assign user" onClick={() => modalStore.openModal()} />
+      <div className="title-button-area">
+        <h2>Users of company</h2>
+        <Button title="Assign user" onClick={() => modalStore.openModal('addUserToCompany')} />
       </div>
 
+      {userList}
+
+      <div className="title-button-area">
+        <h2>Positions</h2>
+        <Button title="Add position" onClick={handleOpenModalForCreatePosition} />
+      </div>
+
+      {positionList}
+
+      <div className="title-button-area">
+        <h2>Stages</h2>
+        <Button title="Add stage" onClick={handleOpenModalForCreateStage} />
+      </div>
+
+      {stageList}
+
       <Modal>
-        <AssignUserToCompanyForm />
+        {modalStore.activeModal === 'addUserToCompany' && <AssignUserToCompanyForm />}
+        {modalStore.activeModal === 'createEditStage' && <AddStageCompanyForm stage={stageStore.currentStage} />}
+        {modalStore.activeModal === 'createEditPosition' && (
+          <AddPositionCompanyForm position={positionStore.currentPosition} />
+        )}
       </Modal>
     </div>
   );
-};
+});
 
 export default CompanySettings;

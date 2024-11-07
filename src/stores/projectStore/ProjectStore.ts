@@ -1,4 +1,4 @@
-import { action, makeAutoObservable, observable, runInAction } from 'mobx';
+import { action, makeAutoObservable, observable } from 'mobx';
 import { Project } from './types';
 import axiosInstance from '../../utils/axiosInstance';
 
@@ -42,9 +42,7 @@ class ProjectStore {
 
     try {
       const response = await axiosInstance.get<Project[]>(`project/company/${company}`);
-      runInAction(() => {
-        this.projects = response.data;
-      });
+      this.projects = response.data;
     } catch (error) {
       console.error(error);
       this.error = error.message;

@@ -1,10 +1,10 @@
-.layout {
+.main-layout {
+    width: 100%;
     display: flex;
+    height: 100%;
     flex-direction: column;
     /* Arrange header, content-area, and footer vertically */
     min-height: 100vh;
-    /* Full viewport height */
-    width: 100%;
 }
 
 .content-area {
@@ -12,7 +12,7 @@
     /* Arrange sidebar and main content side by side */
     flex: 1;
     /* Take up remaining space between header and footer */
-    width: 100vw;
+    width: 100%;
 }
 
 .main-content {

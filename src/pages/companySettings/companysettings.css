@@ -2,5 +2,32 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: flex-start;
+    position: relative;
+}
+
+.title-button-area {
+    display: flex;
+    justify-content: space-between;
     align-items: center;
+    flex-direction: row;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.positions-company {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    position: relative;
+}
+
+.list-style {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    justify-content: center;
 }

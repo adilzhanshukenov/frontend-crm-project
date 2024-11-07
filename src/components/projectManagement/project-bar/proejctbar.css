@@ -1,8 +1,6 @@
-.header {
-    text-align: center;
-    border-bottom: 1px solid white;
-    height: 60px;
+.project-bar {
     width: 100%;
+    height: 50px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -10,9 +8,9 @@
     padding: 10px;
 }
 
-.nav-header {
+.right-side {
     display: flex;
     flex-direction: row;
-    gap: 10px;
-    list-style: none;
+    justify-content: end;
+    align-items: center;
 }
