@@ -2,14 +2,15 @@ import { createBrowserRouter } from 'react-router-dom';
 import MainLayout from './layouts/mainLayout/MainLayout';
 import Dashboard from './pages/dashboard/Dashboard';
 import AuthLayout from './layouts/authLayout/AuthLayout';
-import Login from './pages/login/Login';
-import Registration from './pages/registration/Registration';
-import UsersList from './pages/usersList/UsersList';
-import CompanyList from './pages/companyList/CompanyList';
-import ProjectList from './pages/projectList/ProjectList';
+import Login from './pages/auth/login/Login';
+import Registration from './pages/auth/registration/Registration';
+import UsersList from './pages/user/usersList/UsersList';
+import CompanyList from './pages/company/companyList/CompanyList';
+import ProjectList from './pages/project/projectList/ProjectList';
 import CompanyLayout from './layouts/companyLayout/CompanyLayout';
-import ProjectPage from './pages/projectPage/ProjectPage';
-import CompanySettings from './pages/companySettings/CompanySettings';
+import ProjectPage from './pages/project/projectPage/ProjectPage';
+import CompanySettings from './pages/company/companySettings/CompanySettings';
+import ProjectSettings from './pages/project/projectSettings/ProjectSettings';
 
 const router = createBrowserRouter([
   {
@@ -45,6 +46,10 @@ const router = createBrowserRouter([
       {
         path: 'project/:projectId',
         element: <ProjectPage />,
+      },
+      {
+        path: 'project/:projectId/settings',
+        element: <ProjectSettings />,
       },
     ],
   },

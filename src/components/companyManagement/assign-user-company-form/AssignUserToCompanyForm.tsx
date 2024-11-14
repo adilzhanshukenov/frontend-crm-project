@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import { modalStore } from '../../../stores/modalStore/ModalStore';
 import { userStore } from '../../../stores/userStore/UserStore';
 import Button from '../../shared/button/Button';
-import { UserCompany } from '../../../stores/userStore/types';
+import { UserCompanyFormData } from '../../../stores/userStore/types';
 import './assignusertocompany.css';
 import { positionStore } from '../../../stores/positionStore/PositionStore';
+import { observer } from 'mobx-react-lite';
+import { useRouteParams } from '../../../utils/useRouteParams';
 
-const AssignUserToCompanyForm: React.FC = () => {
-  const { companyId } = useParams<{ companyId: string }>();
+const AssignUserToCompanyForm: React.FC = observer(() => {
+  const { companyId } = useRouteParams();
+
   const [user, setUser] = useState<string>('');
   const [position, setPosition] = useState<string>('');
 
@@ -28,7 +30,7 @@ const AssignUserToCompanyForm: React.FC = () => {
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const formData: UserCompany = {
+    const formData: UserCompanyFormData = {
       company: companyId || '', // Use companyId from URL
       user: user,
       position: position,
@@ -54,16 +56,10 @@ const AssignUserToCompanyForm: React.FC = () => {
     </option>
   ));
 
-  //   const options = userStore.users.map((user) => (
-  //     <option key={user._id} value={user._id}>
-  //       {user.username}
-  //     </option>
-  //   ));
-
   return (
-    <form className="user-company-form" onSubmit={handleFormSubmit}>
+    <form className="modal-form " onSubmit={handleFormSubmit}>
       <h2>Assign User</h2>
-      <div className="company-form-inputs">
+      <div className="modal-form-inputs">
         <label htmlFor="userCompanyInput">User:</label>
         <input
           type="text"
@@ -74,7 +70,7 @@ const AssignUserToCompanyForm: React.FC = () => {
         />
       </div>
 
-      <div className="company-form-inputs">
+      <div className="modal-form-inputs">
         <label>Position:</label>
         <select value={position} onChange={handlePositionChange}>
           <option>Select position</option>
@@ -86,6 +82,6 @@ const AssignUserToCompanyForm: React.FC = () => {
       <Button title="Cancel" onClick={() => modalStore.closeModal()} />
     </form>
   );
-};
+});
 
 export default AssignUserToCompanyForm;

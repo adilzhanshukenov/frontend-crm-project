@@ -1,11 +1,13 @@
 import { action, makeAutoObservable, observable } from 'mobx';
-import { User, UserCompany, UserData } from './types';
+import { User, UserCompany, UserCompanyFormData, UserData } from './types';
 import axiosInstance from '../../utils/axiosInstance';
 
 class UserStore {
   @observable users: User[] = [];
   @observable userCompany: UserCompany[] = [];
+  @observable userToDelete: User | null = null;
   @observable selectedUser: string = '';
+  @observable currentUser: User | null = null;
   @observable userExists: boolean = false;
   @observable loading: boolean = false;
   @observable error: string | null = null;
@@ -18,6 +20,11 @@ class UserStore {
   @action
   setSelectedUser = async (user: string) => {
     this.selectedUser = user;
+  };
+
+  @action
+  setUserToDelete = async (user: User | null) => {
+    this.userToDelete = user;
   };
 
   //load all users
@@ -39,8 +46,12 @@ class UserStore {
   };
 
   //load all users
+  /**
+   *
+   * @param companyId
+   */
   @action
-  fetchAllUsersOfCompany = async (companyId: string | undefined) => {
+  fetchAllUsersOfCompany = async (companyId: string | null) => {
     this.loading = true;
     this.error = null;
     this.success = false;
@@ -55,6 +66,10 @@ class UserStore {
     }
   };
 
+  /**
+   *
+   * @param user
+   */
   @action
   createUser = async (user: UserData) => {
     this.loading = true;
@@ -71,6 +86,10 @@ class UserStore {
     }
   };
 
+  /**
+   *
+   * @param updatedUser
+   */
   @action
   updateUser = async (updatedUser: User) => {
     this.loading = true;
@@ -87,6 +106,10 @@ class UserStore {
     }
   };
 
+  /**
+   *
+   * @param deletedUser
+   */
   @action
   deleteUser = async (deletedUser: User) => {
     this.loading = true;
@@ -104,8 +127,12 @@ class UserStore {
     }
   };
 
+  /**
+   *
+   * @param userCompany
+   */
   @action
-  assignUserToCompany = async (userCompany: UserCompany) => {
+  assignUserToCompany = async (userCompany: UserCompanyFormData) => {
     this.loading = true;
     this.error = null;
     this.success = false;
@@ -120,6 +147,10 @@ class UserStore {
     }
   };
 
+  /**
+   *
+   * @param username
+   */
   @action
   checkUserExists = async (username: string) => {
     try {
@@ -133,6 +164,10 @@ class UserStore {
     }
   };
 
+  /**
+   *
+   * @param username
+   */
   @action
   findUserByName = async (username: string) => {
     try {

@@ -1,3 +1,5 @@
+import { Company } from '../companyStore/types';
+
 export interface User {
   _id?: string;
   username: string;
@@ -14,7 +16,14 @@ export interface UserData {
 }
 
 export interface UserCompany {
-  user: any;
-  company: any;
+  _id?: string;
+  user: User;
+  company: Company;
+  position: string;
+}
+
+export interface UserCompanyFormData {
+  user: string;
+  company: string;
   position: string;
 }

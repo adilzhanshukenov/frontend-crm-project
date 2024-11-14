@@ -1,0 +1,14 @@
+.add-user-to-project-form {
+    display: flex;
+    flex-direction: column;
+    flex: 2;
+    gap: 5px;
+    justify-content: start;
+}
+
+.user-project-form-inputs {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    padding-bottom: 5px;
+}

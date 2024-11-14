@@ -5,7 +5,7 @@ export interface Stage {
 
   description: string;
 
-  company?: string;
+  company?: string | null;
 }
 
 export interface StageFormData {
@@ -13,5 +13,5 @@ export interface StageFormData {
 
   description: string;
 
-  company?: string;
+  company?: string | null;
 }

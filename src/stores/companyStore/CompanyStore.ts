@@ -5,6 +5,8 @@ import axiosInstance from '../../utils/axiosInstance';
 class CompanyStore {
   @observable companyList: Company[] = [];
   @observable selectedCompany: Company | null = null;
+  @observable currectCompany: Company | null = null;
+  @observable companyToDelete: Company | null = null;
   @observable loading: boolean = false;
   @observable error: string | null = null;
   @observable success: boolean = false;
@@ -12,6 +14,11 @@ class CompanyStore {
   constructor() {
     makeAutoObservable(this);
   }
+
+  @action
+  setCompanyToDelete = async (company: Company | null) => {
+    this.companyToDelete = company;
+  };
 
   @action
   fetchAllCompanies = async (): Promise<void> => {
@@ -29,6 +36,10 @@ class CompanyStore {
     }
   };
 
+  /**
+   *
+   * @param company
+   */
   @action
   createNewCompany = async (company: CompanyFormData) => {
     this.loading = true;
@@ -45,6 +56,10 @@ class CompanyStore {
     }
   };
 
+  /**
+   *
+   * @param updatedCompany
+   */
   @action
   updateCompany = async (updatedCompany: Company) => {
     this.loading = true;
@@ -64,6 +79,10 @@ class CompanyStore {
     }
   };
 
+  /**
+   *
+   * @param deletedCompany
+   */
   @action
   deleteCompany = async (deletedCompany: Company | undefined) => {
     this.loading = true;
@@ -80,6 +99,10 @@ class CompanyStore {
     }
   };
 
+  /**
+   *
+   * @param companyId
+   */
   @action
   getCompanyById = async (companyId: string | undefined) => {
     this.loading = true;

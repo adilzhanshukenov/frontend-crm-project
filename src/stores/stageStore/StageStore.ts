@@ -1,9 +1,11 @@
 import { action, makeAutoObservable, observable } from 'mobx';
 import { Stage } from './types';
 import axiosInstance from '../../utils/axiosInstance';
+import { modalStore } from '../modalStore/ModalStore';
 
 class StageStore {
   @observable stageList: Stage[] = [];
+  @observable stageToDelete: Stage | null = null;
   @observable currentStage: Stage | null = null;
   @observable loading: boolean = false;
   @observable error: string | null = null;
@@ -13,6 +15,19 @@ class StageStore {
     makeAutoObservable(this);
   }
 
+  /**
+   *
+   * @param stage
+   */
+  @action
+  setStageToDelete = async (stage: Stage | null) => {
+    this.stageToDelete = stage;
+  };
+
+  /**
+   *
+   * @param stage
+   */
   @action
   addStageToCompany = async (stage: Stage) => {
     this.loading = true;
@@ -29,8 +44,12 @@ class StageStore {
     }
   };
 
+  /**
+   *
+   * @param companyId
+   */
   @action
-  fetchAllStages = async (companyId: string | undefined): Promise<void> => {
+  fetchAllStages = async (companyId: string | null): Promise<void> => {
     this.loading = true;
     this.error = null;
     this.success = false;
@@ -46,6 +65,10 @@ class StageStore {
     }
   };
 
+  /**
+   *
+   * @param updatedStage
+   */
   @action
   updateStage = async (updatedStage: Stage) => {
     this.loading = true;
@@ -60,6 +83,32 @@ class StageStore {
     } finally {
       this.loading = false;
     }
+  };
+
+  @action
+  deleteStage = async (stageId: string | undefined) => {
+    this.loading = true;
+    this.error = null;
+    this.success = false;
+
+    try {
+      await axiosInstance.delete(`stage/${stageId}`);
+      this.stageList = this.stageList.filter((stage) => stage._id !== stageId);
+      this.success = true;
+    } catch (error) {
+      this.error = error.message;
+    } finally {
+      this.loading = false;
+    }
+  };
+
+  openModalForCreate = () => {
+    stageStore.currentStage = null;
+    modalStore.openAnyModal({ mode: 'create', activeModal: 'createEditStage' });
+  };
+
+  openModalForEdit = () => {
+    modalStore.openAnyModal({ mode: 'edit', activeModal: 'createEditStage' });
   };
 }
 

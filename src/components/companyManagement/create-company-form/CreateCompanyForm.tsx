@@ -35,17 +35,17 @@ export const CreateCompanyForm: React.FC<CompanyFormProps> = ({ company, onSubmi
   };
 
   return (
-    <form className="create-company-form" onSubmit={handleSubmit}>
+    <form className="modal-form" onSubmit={handleSubmit}>
       <h2>{company ? 'Update company' : 'Create company'}</h2>
-      <div className="company-form-inputs">
+      <div className="modal-form-inputs">
         <label>Name:</label>
         <input type="text" name="name" value={formData.name} onChange={handleChange} required />
       </div>
-      <div className="company-form-inputs">
+      <div className="modal-form-inputs">
         <label>Address:</label>
         <input type="text" name="address" value={formData.address} onChange={handleChange} required />
       </div>
-      <div className="company-form-inputs">
+      <div className="modal-form-inputs">
         <label>Industry:</label>
         <input type="text" name="industry" value={formData.industry} onChange={handleChange} required />
       </div>

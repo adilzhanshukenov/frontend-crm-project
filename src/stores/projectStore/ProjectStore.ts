@@ -1,5 +1,5 @@
 import { action, makeAutoObservable, observable } from 'mobx';
-import { Project } from './types';
+import { Project, ProjectData } from './types';
 import axiosInstance from '../../utils/axiosInstance';
 
 class ProjectStore {
@@ -18,6 +18,10 @@ class ProjectStore {
     this.selectedProject = project;
   };
 
+  /**
+   *
+   * @param project
+   */
   @action
   getProject = async (project: Project) => {
     this.loading = true;
@@ -35,16 +39,42 @@ class ProjectStore {
     }
   };
 
+  /**
+   *
+   * @param company
+   */
   @action
   fetchProjectsOfCompany = async (company?: string) => {
     this.loading = true;
     this.error = null;
+    this.success = false;
 
     try {
       const response = await axiosInstance.get<Project[]>(`project/company/${company}`);
       this.projects = response.data;
+      this.success = true;
     } catch (error) {
       console.error(error);
+      this.error = error.message;
+    } finally {
+      this.loading = false;
+    }
+  };
+
+  /**
+   *
+   * @param project
+   */
+  @action
+  addProject = async (project: ProjectData) => {
+    this.loading = true;
+    this.error = null;
+    this.success = false;
+
+    try {
+      await axiosInstance.post(`project`, project);
+      this.success = true;
+    } catch (error) {
       this.error = error.message;
     } finally {
       this.loading = false;

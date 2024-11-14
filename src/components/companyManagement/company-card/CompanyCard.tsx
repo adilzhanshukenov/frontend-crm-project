@@ -14,7 +14,7 @@ const CompanyCard: React.FC<CompanyCardProps> = ({ company, onSettings, onEdit, 
   return (
     <div className="company-card">
       <p>{company.name}</p>
-      <div>
+      <div className="card-buttons">
         <Button
           title="Settings"
           onClick={(e: FormEvent) => {

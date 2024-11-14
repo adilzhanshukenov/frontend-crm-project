@@ -1,8 +1,8 @@
 import { observer } from 'mobx-react-lite';
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { projectStore } from '../../stores/projectStore/ProjectStore';
-import { Project } from '../../stores/projectStore/types';
+import { projectStore } from '../../../stores/projectStore/ProjectStore';
+import { Project } from '../../../stores/projectStore/types';
 
 const ProjectList: React.FC = observer(() => {
   const { companyId } = useParams<{ companyId: string }>();

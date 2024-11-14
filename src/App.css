@@ -5,5 +5,41 @@
 }
 
 #root {
-  max-width: 1280px;
+  max-width: 1440px;
+}
+
+/**
+Global styles
+**/
+.title-area {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+  padding-bottom: 10px;
+  padding-top: 10px;
+}
+
+.card-buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+}
+
+/**
+Modal form styles
+**/
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  flex: 2;
+  gap: 5px;
+  justify-content: start;
+}
+
+.modal-form-inputs {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  padding-bottom: 5px;
 }

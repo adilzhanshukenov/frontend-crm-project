@@ -1,6 +1,4 @@
 import { action, makeAutoObservable, observable } from 'mobx';
-import { Company } from '../companyStore/types';
-import { User } from '../userStore/types';
 
 interface ModalProps {
   mode: 'create' | 'edit' | 'delete';
@@ -10,9 +8,6 @@ interface ModalProps {
 class ModalStore {
   @observable isOpen: boolean = false;
   @observable mode: 'create' | 'edit' | 'delete' = 'create';
-  @observable currectCompany: Company | null = null;
-  @observable currentUser: User | null = null;
-
   @observable activeModal: string | null = null;
 
   constructor() {

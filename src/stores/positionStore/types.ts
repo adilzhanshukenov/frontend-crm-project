@@ -5,7 +5,7 @@ export interface Position {
 
   description: string;
 
-  company?: string;
+  company?: string | null;
 }
 
 export interface PositionFormData {
@@ -13,5 +13,5 @@ export interface PositionFormData {
 
   description: string;
 
-  company?: string;
+  company?: string | null;
 }

@@ -1,28 +1,32 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useNavigate } from 'react-router-dom';
 import './companylist.css';
-import { CreateCompanyForm } from '../../components/companyManagement/create-company-form/CreateCompanyForm';
-import HeaderTitle from '../../components/shared/header-title/HeaderTitle';
-import CompanyCard from '../../components/companyManagement/company-card/CompanyCard';
-import Modal from '../../components/shared/modal/Modal';
-import { companyStore } from '../../stores/companyStore/CompanyStore';
-import { modalStore } from '../../stores/modalStore/ModalStore';
-import { Company } from '../../stores/companyStore/types';
-import Button from '../../components/shared/button/Button';
-import ConfirmationModal from '../../components/shared/confirmation-modal/ConfirmationModal';
+import { CreateCompanyForm } from '../../../components/companyManagement/create-company-form/CreateCompanyForm';
+import HeaderTitle from '../../../components/shared/header-title/HeaderTitle';
+import CompanyCard from '../../../components/companyManagement/company-card/CompanyCard';
+import Modal from '../../../components/shared/modal/Modal';
+import { companyStore } from '../../../stores/companyStore/CompanyStore';
+import { modalStore } from '../../../stores/modalStore/ModalStore';
+import { Company } from '../../../stores/companyStore/types';
+import Button from '../../../components/shared/button/Button';
+import ConfirmationModal from '../../../components/shared/confirmation-modal/ConfirmationModal';
+import { useAuth } from '../../../context/useAuth';
 
 const CompanyList: React.FC = observer(() => {
-  const [companyToDelete, setCompanyToDelete] = useState<Company | null>(null);
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+
+  if (!isAuthenticated) {
+    return <p>Please log in to view your profile.</p>;
+  }
 
   useEffect(() => {
     companyStore.fetchAllCompanies();
   }, []);
 
-  const navigate = useNavigate();
-
   const handleOpenModalForCreate = () => {
-    modalStore.currectCompany = null;
+    companyStore.currectCompany = null;
     modalStore.openAnyModal({ mode: 'create', activeModal: 'createEditCompany' });
   };
 
@@ -31,18 +35,18 @@ const CompanyList: React.FC = observer(() => {
   };
 
   const openDeleteConfirmation = (company: Company | null) => {
-    setCompanyToDelete(company);
+    companyStore.setCompanyToDelete(company);
   };
 
   const handleConfirmDelete = () => {
-    if (companyToDelete !== null) {
-      companyStore.deleteCompany(companyToDelete);
-      setCompanyToDelete(null);
+    if (companyStore.companyToDelete !== null) {
+      companyStore.deleteCompany(companyStore.companyToDelete);
+      companyStore.setCompanyToDelete(null);
     }
   };
 
   const handleCancelDelete = () => {
-    setCompanyToDelete(null);
+    companyStore.setCompanyToDelete(null);
   };
 
   const handleFormSubmit = async (companyData: Company) => {
@@ -58,13 +62,7 @@ const CompanyList: React.FC = observer(() => {
   if (companyStore.loading) return <p>Loading...</p>;
   if (companyStore.error) return <p>Error: {companyStore.error}</p>;
 
-  //   const handleDelete = async (companyId: string | undefined) => {
-  //     await companyStore.deleteCompany(companyId);
-  //     companyStore.fetchAllCompanies();
-  //   };
-
   const handleCompanyClick = (company: Company) => {
-    companyStore.setSelectedCompany(company);
     navigate(`/companies/${company._id}`);
   };
 
@@ -72,7 +70,7 @@ const CompanyList: React.FC = observer(() => {
     navigate(`/companies/${company._id}/settings`);
   };
 
-  const handleCompanyCreated = () => {
+  const handleClose = () => {
     companyStore.fetchAllCompanies();
     modalStore.closeModal();
     // Refetch users after user creation
@@ -88,7 +86,7 @@ const CompanyList: React.FC = observer(() => {
                 handleCompanySettingsClick(company);
               }}
               onEdit={() => {
-                modalStore.currectCompany = company;
+                companyStore.currectCompany = company;
                 handleOpenModalForEdit();
               }}
               onDelete={() => openDeleteConfirmation(company)}
@@ -102,7 +100,7 @@ const CompanyList: React.FC = observer(() => {
 
   return (
     <div>
-      <div className="company-title-area">
+      <div className="title-area">
         <HeaderTitle title="Company List" />
         <Button title="Create Company" onClick={handleOpenModalForCreate} />
       </div>
@@ -112,13 +110,13 @@ const CompanyList: React.FC = observer(() => {
       <Modal>
         {modalStore.activeModal === 'createEditCompany' && (
           <CreateCompanyForm
-            company={modalStore.currectCompany}
+            company={companyStore.currectCompany}
             onSubmit={handleFormSubmit}
-            handleClose={handleCompanyCreated}
+            handleClose={handleClose}
           />
         )}
       </Modal>
-      {companyToDelete !== null && (
+      {companyStore.companyToDelete !== null && (
         <ConfirmationModal
           message="Are you sure you want to delete this company?"
           onConfirm={handleConfirmDelete}
