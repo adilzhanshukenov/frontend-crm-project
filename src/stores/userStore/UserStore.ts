@@ -1,10 +1,9 @@
 import { action, makeAutoObservable, observable } from 'mobx';
-import { User, UserCompany, UserCompanyFormData, UserData } from './types';
+import { User, UserData } from './types';
 import axiosInstance from '../../utils/axiosInstance';
 
 class UserStore {
   @observable users: User[] = [];
-  @observable userCompany: UserCompany[] = [];
   @observable userToDelete: User | null = null;
   @observable selectedUser: string = '';
   @observable currentUser: User | null = null;
@@ -37,27 +36,6 @@ class UserStore {
     try {
       const response = await axiosInstance.get<User[]>(`/user`);
       this.users = response.data;
-      this.success = true;
-    } catch (error) {
-      this.error = error.message;
-    } finally {
-      this.loading = false;
-    }
-  };
-
-  //load all users
-  /**
-   *
-   * @param companyId
-   */
-  @action
-  fetchAllUsersOfCompany = async (companyId: string | null) => {
-    this.loading = true;
-    this.error = null;
-    this.success = false;
-    try {
-      const response = await axiosInstance.get<UserCompany[]>(`/user-company/${companyId}`);
-      this.userCompany = response.data;
       this.success = true;
     } catch (error) {
       this.error = error.message;
@@ -122,26 +100,6 @@ class UserStore {
       this.success = true;
     } catch (error) {
       this.error = error.message;
-    } finally {
-      this.loading = false;
-    }
-  };
-
-  /**
-   *
-   * @param userCompany
-   */
-  @action
-  assignUserToCompany = async (userCompany: UserCompanyFormData) => {
-    this.loading = true;
-    this.error = null;
-    this.success = false;
-
-    try {
-      await axiosInstance.post(`/user-company`, userCompany);
-      this.success = true;
-    } catch (error) {
-      this.error = error;
     } finally {
       this.loading = false;
     }

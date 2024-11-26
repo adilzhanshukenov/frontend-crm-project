@@ -1,23 +1,19 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { modalStore } from '../../../stores/modalStore/ModalStore';
 import { userStore } from '../../../stores/userStore/UserStore';
-import Button from '../../shared/button/Button';
-import { UserCompanyFormData } from '../../../stores/userStore/types';
 import './assignusertocompany.css';
 import { positionStore } from '../../../stores/positionStore/PositionStore';
 import { observer } from 'mobx-react-lite';
 import { useRouteParams } from '../../../utils/useRouteParams';
+import CancelButton from '../../shared/cancel-button/CancelButton';
+import { CompanyUserFormData } from '../../../stores/companyStore/types';
+import { companyStore } from '../../../stores/companyStore/CompanyStore';
 
 const AssignUserToCompanyForm: React.FC = observer(() => {
   const { companyId } = useRouteParams();
 
   const [user, setUser] = useState<string>('');
   const [position, setPosition] = useState<string>('');
-
-  useEffect(() => {
-    // userStore.fetchAllUsers();
-    positionStore.fetchAllPositions(companyId);
-  }, [companyId]);
 
   const handleUserChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUser(e.target.value);
@@ -30,7 +26,7 @@ const AssignUserToCompanyForm: React.FC = observer(() => {
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const formData: UserCompanyFormData = {
+    const formData: CompanyUserFormData = {
       company: companyId || '', // Use companyId from URL
       user: user,
       position: position,
@@ -42,11 +38,11 @@ const AssignUserToCompanyForm: React.FC = observer(() => {
       await userStore.findUserByName(user);
       console.log(userStore.selectedUser);
       const formData2 = { ...formData, user: userStore.selectedUser };
-      await userStore.assignUserToCompany(formData2);
+      await companyStore.assignUserToCompany(formData2);
     } else {
       console.log('User already exists');
     }
-    userStore.fetchAllUsersOfCompany(companyId);
+    companyStore.fetchAllUsersOfCompany(companyId);
     modalStore.closeModal();
   };
 
@@ -79,7 +75,7 @@ const AssignUserToCompanyForm: React.FC = observer(() => {
         {/* <input type="text" value={position} onChange={handleRoleChange} placeholder="Enter role" /> */}
       </div>
       <button type="submit">Assign</button>
-      <Button title="Cancel" onClick={() => modalStore.closeModal()} />
+      <CancelButton />
     </form>
   );
 });

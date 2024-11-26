@@ -1,0 +1,21 @@
+.tab-buttons {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    width: 100%;
+    border-bottom: 1px solid white;
+    padding: 5px;
+}
+
+.tab-button {
+    border: none;
+    cursor: pointer;
+}
+
+.tab-button.active {
+    border-bottom: 2px solid blue;
+}
+
+.tab-content {
+    padding: 20px
+}

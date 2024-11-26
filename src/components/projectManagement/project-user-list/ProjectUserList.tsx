@@ -3,38 +3,38 @@ import { observer } from 'mobx-react-lite';
 import { useRouteParams } from '../../../utils/useRouteParams';
 import { modalStore } from '../../../stores/modalStore/ModalStore';
 import { User } from '../../../stores/userStore/types';
-import UserCard from '../user-card/UserCard';
+import UserCard from '../../userManagement/user-card/UserCard';
 import Button from '../../shared/button/Button';
 import ConfirmationModal from '../../shared/confirmation-modal/ConfirmationModal';
-import { userProjectStore } from '../../../stores/userProjectStore/UserProjectStore';
+import { projectStore } from '../../../stores/projectStore/ProjectStore';
 
-const UserProjectList: React.FC = observer(() => {
+const ProjectUserList: React.FC = observer(() => {
   const { projectId } = useRouteParams();
 
   useEffect(() => {
-    userProjectStore.fetchUsersOfProject(projectId);
+    projectStore.fetchUsersOfProject(projectId);
   }, [projectId]);
 
   const openDeleteConfirmation = (user: User | null) => {
-    userProjectStore.setUserToDelete(user);
+    projectStore.setUserToDelete(user);
   };
 
   const handleEdit = async () => {};
 
   const handleConfirmDelete = async () => {
-    if (userProjectStore.userToDelete !== null) {
-      await userProjectStore.deleteUserFromProject(userProjectStore.userToDelete?._id);
-      userProjectStore.setUserToDelete(null);
-      userProjectStore.fetchUsersOfProject(projectId);
+    if (projectStore.userToDelete !== null) {
+      await projectStore.deleteUserFromProject(projectStore.userToDelete?._id);
+      projectStore.setUserToDelete(null);
+      projectStore.fetchUsersOfProject(projectId);
     }
   };
 
   const handleCancelDelete = async () => {
-    userProjectStore.setUserToDelete(null);
+    projectStore.setUserToDelete(null);
   };
 
-  if (userProjectStore.loading) return <p>Loading...</p>;
-  if (userProjectStore.error) return <p>Error: {userProjectStore.error}</p>;
+  if (projectStore.loading) return <p>Loading...</p>;
+  if (projectStore.error) return <p>Error: {projectStore.error}</p>;
 
   return (
     <div>
@@ -46,20 +46,21 @@ const UserProjectList: React.FC = observer(() => {
         />
       </div>
       <ul className="list-style">
-        {userProjectStore.userProject?.map((userProject) => (
-          <li key={userProject._id}>
+        {projectStore.projectUser?.map((projectUser) => (
+          <li key={projectUser._id}>
+            <p>{projectUser.role}</p>
             <UserCard
-              user={userProject.user}
+              user={projectUser.user}
               onEdit={handleEdit}
               onDelete={() => {
-                openDeleteConfirmation(userProject.user);
+                openDeleteConfirmation(projectUser.user);
               }}
             />
           </li>
         ))}
       </ul>
 
-      {userProjectStore.userToDelete !== null && (
+      {projectStore.userToDelete !== null && (
         <ConfirmationModal
           message="Are you sure you want to delete this user?"
           onConfirm={handleConfirmDelete}
@@ -70,4 +71,4 @@ const UserProjectList: React.FC = observer(() => {
   );
 });
 
-export default UserProjectList;
+export default ProjectUserList;

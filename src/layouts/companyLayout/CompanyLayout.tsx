@@ -6,6 +6,8 @@ import { modalStore } from '../../stores/modalStore/ModalStore';
 import CreateProjectForm from '../../components/projectManagement/create-project-form/CreateProjectForm';
 import { observer } from 'mobx-react-lite';
 import AddUserToProjectForm from '../../components/projectManagement/add-user-project-form/AddUserToProjectForm';
+import AddStageProjectForm from '../../components/projectManagement/add-stage-project-form/AddStageProjectForm';
+import AddTaskForm from '../../components/taskManagement/add-task-form/AddTaskForm';
 
 const CompanyLayout: React.FC = observer(() => {
   return (
@@ -17,6 +19,8 @@ const CompanyLayout: React.FC = observer(() => {
       <Modal>
         {modalStore.activeModal === 'createProjectModal' && <CreateProjectForm />}
         {modalStore.activeModal === 'addUserToProject' && <AddUserToProjectForm />}
+        {modalStore.activeModal === 'addStageToProject' && <AddStageProjectForm />}
+        {modalStore.activeModal === 'addTaskModal' && <AddTaskForm />}
       </Modal>
     </div>
   );

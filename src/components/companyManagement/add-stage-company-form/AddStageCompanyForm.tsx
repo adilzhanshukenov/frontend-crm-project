@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { modalStore } from '../../../stores/modalStore/ModalStore';
-import { Stage, StageFormData } from '../../../stores/stageStore/types';
-import { stageStore } from '../../../stores/stageStore/StageStore';
-import Button from '../../shared/button/Button';
 import { useRouteParams } from '../../../utils/useRouteParams';
 import './addstagecompany.css';
+import CancelButton from '../../shared/cancel-button/CancelButton';
+import { Stage, StageFormData } from '../../../stores/companyStore/types';
+import { companyStore } from '../../../stores/companyStore/CompanyStore';
 
 interface StageFormProps {
   stage?: Stage | null;
@@ -44,12 +44,12 @@ const AddStageCompanyForm: React.FC<StageFormProps> = ({ stage }) => {
     const stageData: Stage = stage ? { ...stage, ...formData } : { ...formData };
 
     if (modalStore.mode === 'edit') {
-      await stageStore.updateStage(stageData);
+      await companyStore.updateStage(stageData);
     } else {
-      await stageStore.addStageToCompany(stageData);
+      await companyStore.addStageToCompany(stageData);
     }
 
-    stageStore.fetchAllStages(companyId);
+    companyStore.fetchAllStages(companyId);
     modalStore.closeModal();
   };
 
@@ -67,7 +67,7 @@ const AddStageCompanyForm: React.FC<StageFormProps> = ({ stage }) => {
       </div>
 
       <button type="submit">{modalStore.mode === 'edit' ? 'Edit stage' : 'Add stage'}</button>
-      <Button title="Cancel" onClick={() => modalStore.closeModal()} />
+      <CancelButton />
     </form>
   );
 };

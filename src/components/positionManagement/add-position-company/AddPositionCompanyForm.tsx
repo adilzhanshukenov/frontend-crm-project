@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
-import Button from '../../shared/button/Button';
 import { modalStore } from '../../../stores/modalStore/ModalStore';
 import './addpositioncompany.css';
 import { positionStore } from '../../../stores/positionStore/PositionStore';
 import { Position, PositionFormData } from '../../../stores/positionStore/types';
 import { useRouteParams } from '../../../utils/useRouteParams';
+import CancelButton from '../../shared/cancel-button/CancelButton';
 
 interface PositionFormProps {
   position?: Position | null;
@@ -56,7 +56,7 @@ const AddPositionCompanyForm: React.FC<PositionFormProps> = observer(({ position
         <textarea name="description" value={formData.description} onChange={handleChange} />
       </div>
       <button type="submit">{position ? 'Update position' : 'Add position'}</button>
-      <Button title="Cancel" onClick={() => modalStore.closeModal()} />
+      <CancelButton />
     </form>
   );
 });

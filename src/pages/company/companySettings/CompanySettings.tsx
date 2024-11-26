@@ -3,13 +3,13 @@ import AssignUserToCompanyForm from '../../../components/companyManagement/assig
 import Modal from '../../../components/shared/modal/Modal';
 import { modalStore } from '../../../stores/modalStore/ModalStore';
 import AddPositionCompanyForm from '../../../components/positionManagement/add-position-company/AddPositionCompanyForm';
-import AddStageCompanyForm from '../../../components/stageManagement/add-stage-company/AddStageCompanyForm';
 import { positionStore } from '../../../stores/positionStore/PositionStore';
-import { stageStore } from '../../../stores/stageStore/StageStore';
 import StageList from '../../../components/stageManagement/stage-list/StageList';
 import PositionList from '../../../components/positionManagement/position-list/PositionList';
-import UserCompanyList from '../../../components/userManagement/user-company-list/UserCompanyList';
+import UserCompanyList from '../../../components/companyManagement/company-user-list/CompanyUserList';
 import './companysettings.css';
+import AddStageCompanyForm from '../../../components/companyManagement/add-stage-company-form/AddStageCompanyForm';
+import { companyStore } from '../../../stores/companyStore/CompanyStore';
 
 const CompanySettings = observer(() => {
   return (
@@ -22,7 +22,7 @@ const CompanySettings = observer(() => {
 
       <Modal>
         {modalStore.activeModal === 'addUserToCompany' && <AssignUserToCompanyForm />}
-        {modalStore.activeModal === 'createEditStage' && <AddStageCompanyForm stage={stageStore.currentStage} />}
+        {modalStore.activeModal === 'createEditStage' && <AddStageCompanyForm stage={companyStore.currentStage} />}
         {modalStore.activeModal === 'createEditPosition' && (
           <AddPositionCompanyForm position={positionStore.currentPosition} />
         )}

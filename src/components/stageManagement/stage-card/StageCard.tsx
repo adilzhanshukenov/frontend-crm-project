@@ -1,7 +1,7 @@
 import { FormEvent } from 'react';
-import { Stage } from '../../../stores/stageStore/types';
 import Button from '../../shared/button/Button';
 import './stagecard.css';
+import { Stage } from '../../../stores/companyStore/types';
 
 interface StageCardProps {
   stage: Stage;
@@ -13,8 +13,8 @@ const StageCard: React.FC<StageCardProps> = ({ stage, onEdit, onDelete }) => {
   return (
     <div className="stage-card">
       <div>
-        <h3>{stage.name}</h3>
-        <p>{stage.description}</p>
+        <h3>{stage?.name}</h3>
+        <p>{stage?.description}</p>
       </div>
       <div className="card-buttons">
         <Button

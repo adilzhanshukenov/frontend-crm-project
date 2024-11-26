@@ -1,11 +1,10 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { projectStatusStore } from '../../../stores/projectStatusStore/ProjectStatusStore';
-import Button from '../../shared/button/Button';
 import { modalStore } from '../../../stores/modalStore/ModalStore';
 import { projectStore } from '../../../stores/projectStore/ProjectStore';
 import './createprojectform.css';
 import { observer } from 'mobx-react-lite';
+import CancelButton from '../../shared/cancel-button/CancelButton';
 
 interface CreateProjectFormProps {
   name: string;
@@ -29,7 +28,7 @@ const CreateProjectForm: React.FC = observer(() => {
   });
 
   useEffect(() => {
-    projectStatusStore.getProjectStatuses();
+    projectStore.getProjectStatuses();
     projectStore.fetchProjectsOfCompany(companyId);
   }, [companyId]);
 
@@ -52,7 +51,7 @@ const CreateProjectForm: React.FC = observer(() => {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  const projectStatuses = projectStatusStore.projectStatuses.map((projectStatus) => (
+  const projectStatuses = projectStore.projectStatuses.map((projectStatus) => (
     <option key={projectStatus} value={projectStatus}>
       {projectStatus}
     </option>
@@ -85,7 +84,7 @@ const CreateProjectForm: React.FC = observer(() => {
         </select>
       </div>
       <button type="submit">Create</button>
-      <Button title="Cancel" onClick={() => modalStore.closeModal()} />
+      <CancelButton />
     </form>
   );
 });

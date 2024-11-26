@@ -1,45 +1,34 @@
 import { observer } from 'mobx-react-lite';
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
-import Button from '../../shared/button/Button';
 import { modalStore } from '../../../stores/modalStore/ModalStore';
-import { userProjectStore } from '../../../stores/userProjectStore/UserProjectStore';
 import './addusertoprojectform.css';
-import { userStore } from '../../../stores/userStore/UserStore';
 import { positionStore } from '../../../stores/positionStore/PositionStore';
-import { roleStore } from '../../../stores/roleStore/RoleStore';
 import { useRouteParams } from '../../../utils/useRouteParams';
-
-interface AddUserToProjectFormProps {
-  user: string;
-  project: string | null;
-  position: string;
-  role: string;
-  assigned_at: string;
-}
+import CancelButton from '../../shared/cancel-button/CancelButton';
+import { ProjectUserData } from '../../../stores/projectStore/types';
+import { projectStore } from '../../../stores/projectStore/ProjectStore';
+import { companyStore } from '../../../stores/companyStore/CompanyStore';
 
 const AddUserToProjectForm: React.FC = observer(() => {
   const { projectId, companyId } = useRouteParams();
 
   useEffect(() => {
     positionStore.fetchAllPositions(companyId);
-    userStore.fetchAllUsersOfCompany(companyId);
-    roleStore.fetchAllRoles();
+    companyStore.fetchAllUsersOfCompany(companyId);
+    projectStore.fetchAllRoles();
   }, [companyId]);
 
-  const [formData, setFormData] = useState<AddUserToProjectFormProps>({
+  const [formData, setFormData] = useState<ProjectUserData>({
     user: '',
     project: projectId,
     position: '',
     role: '',
-    assigned_at: '',
   });
 
   const handleFormSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    const convertDateFormData = { ...formData, assigned_at: new Date(formData.assigned_at) };
-    console.log(convertDateFormData);
-    await userProjectStore.addUserToProject(convertDateFormData);
-    userProjectStore.fetchUsersOfProject(projectId);
+    await projectStore.addUserToProject(formData);
+    projectStore.fetchUsersOfProject(projectId);
     modalStore.closeModal();
   };
 
@@ -48,9 +37,9 @@ const AddUserToProjectForm: React.FC = observer(() => {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  const userList = userStore.userCompany.map((userCompany) => (
-    <option key={userCompany._id} value={userCompany.user._id}>
-      {userCompany.user.username}
+  const userList = companyStore.companyUser.map((companyUser) => (
+    <option key={companyUser._id} value={companyUser.user._id}>
+      {companyUser.user.username}
     </option>
   ));
 
@@ -60,7 +49,11 @@ const AddUserToProjectForm: React.FC = observer(() => {
     </option>
   ));
 
-  const roleList = roleStore.roles.map((role) => <option value={role}>{role}</option>);
+  const roleList = projectStore.projectRoles.map((role) => (
+    <option key={role} value={role}>
+      {role}
+    </option>
+  ));
 
   return (
     <form className="modal-form" onSubmit={handleFormSubmit}>
@@ -86,17 +79,8 @@ const AddUserToProjectForm: React.FC = observer(() => {
           {roleList}
         </select>
       </div>
-      <div className="modal-form-inputs">
-        <label>Assigned on:</label>
-        <input type="date" name="assigned_at" value={formData.assigned_at} onChange={handleChange} />
-      </div>
       <button type="submit">Add user</button>
-      <Button
-        title="Cancel"
-        onClick={() => {
-          modalStore.closeModal();
-        }}
-      />
+      <CancelButton />
     </form>
   );
 });

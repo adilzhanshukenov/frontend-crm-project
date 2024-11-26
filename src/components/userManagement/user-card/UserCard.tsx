@@ -12,7 +12,7 @@ interface UserCardProps {
 const UserCard: React.FC<UserCardProps> = ({ user, onEdit, onDelete }) => {
   return (
     <div className="user-card">
-      <p>{user?.username}</p>
+      <p>{user.username}</p>
       <div className="card-buttons">
         <Button
           title="Edit"

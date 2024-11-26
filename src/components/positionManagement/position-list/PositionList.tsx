@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
+import { observer } from 'mobx-react-lite';
 import { positionStore } from '../../../stores/positionStore/PositionStore';
 import { useRouteParams } from '../../../utils/useRouteParams';
 import Button from '../../shared/button/Button';
 import PositionCard from '../position-card/PositionCard';
-import { observer } from 'mobx-react-lite';
 import { Position } from '../../../stores/positionStore/types';
 import ConfirmationModal from '../../shared/confirmation-modal/ConfirmationModal';
 
