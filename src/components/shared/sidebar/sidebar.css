@@ -2,6 +2,10 @@
     width: 200px;
     padding: 20px;
     border-right: 1px solid white;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .sidebar-list {
@@ -11,8 +15,12 @@
 
 @media (max-width: 768px) {
     .sidebar {
-        width: 100%; /* Sidebar takes full width on mobile */
+        width: 100%;
+        /* Sidebar takes full width on mobile */
         border-right: none;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
     }
 
     ul {

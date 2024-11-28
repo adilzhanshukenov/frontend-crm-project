@@ -1,22 +1,20 @@
 import { observer } from 'mobx-react-lite';
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
-import { modalStore } from '../../../stores/modalStore/ModalStore';
 import './addusertoprojectform.css';
-import { positionStore } from '../../../stores/positionStore/PositionStore';
 import { useRouteParams } from '../../../utils/useRouteParams';
 import CancelButton from '../../shared/cancel-button/CancelButton';
 import { ProjectUserData } from '../../../stores/projectStore/types';
-import { projectStore } from '../../../stores/projectStore/ProjectStore';
-import { companyStore } from '../../../stores/companyStore/CompanyStore';
+import rootStore from '../../../stores/rootStore/RootStore';
 
 const AddUserToProjectForm: React.FC = observer(() => {
   const { projectId, companyId } = useRouteParams();
+  const { positionStore, projectStore, companyStore, modalStore } = rootStore;
 
   useEffect(() => {
     positionStore.fetchAllPositions(companyId);
     companyStore.fetchAllUsersOfCompany(companyId);
     projectStore.fetchAllRoles();
-  }, [companyId]);
+  }, [companyId, positionStore, projectStore, companyStore]);
 
   const [formData, setFormData] = useState<ProjectUserData>({
     user: '',

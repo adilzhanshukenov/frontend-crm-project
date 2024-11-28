@@ -3,8 +3,7 @@ import CancelButton from '../../shared/cancel-button/CancelButton';
 import { FormEvent, useEffect, useState } from 'react';
 import { TaskData } from '../../../stores/taskStore/types';
 import { useRouteParams } from '../../../utils/useRouteParams';
-import { taskStore } from '../../../stores/taskStore/TaskStore';
-import { modalStore } from '../../../stores/modalStore/ModalStore';
+import rootStore from '../../../stores/rootStore/RootStore';
 
 interface TaskFormData {
   name: string;
@@ -16,19 +15,13 @@ interface TaskFormData {
   stage: string;
 }
 
-interface TaskStageUserFormData {
-  task: string;
-  stage: string;
-  user: string;
-}
-
 const AddTaskForm: React.FC = observer(() => {
   const { projectId } = useRouteParams();
+  const { taskStore, modalStore } = rootStore;
 
   useEffect(() => {
     taskStore.fetchStatusAndPriority();
-    taskStore.getFirstStage(projectId);
-  }, [projectId]);
+  }, [projectId, taskStore]);
 
   const [formData, setFormData] = useState<TaskFormData>({
     name: '',
@@ -38,12 +31,6 @@ const AddTaskForm: React.FC = observer(() => {
     priority: '',
     project: projectId,
     stage: '',
-  });
-
-  const [taskStageUserFormData, setTaskStageUserFormData] = useState<TaskStageUserFormData>({
-    task: '',
-    stage: taskStore.firstStage,
-    user: '',
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {

@@ -1,37 +1,37 @@
 import { useEffect } from 'react';
-import { modalStore } from '../../../stores/modalStore/ModalStore';
+import { observer } from 'mobx-react-lite';
 import Button from '../../shared/button/Button';
 import { useRouteParams } from '../../../utils/useRouteParams';
 import StageCard from '../../stageManagement/stage-card/StageCard';
-import { observer } from 'mobx-react-lite';
 import ConfirmationModal from '../../shared/confirmation-modal/ConfirmationModal';
-import { projectStore } from '../../../stores/projectStore/ProjectStore';
-import { Stage } from '../../../stores/companyStore/types';
+import { Stage } from '../../../stores/stageStore/types';
+import rootStore from '../../../stores/rootStore/RootStore';
 
 const StageProjectList: React.FC = observer(() => {
   const { projectId } = useRouteParams();
+  const { stageStore, modalStore } = rootStore;
 
   useEffect(() => {
-    projectStore.fetchStagesOfProject(projectId);
-  }, [projectId]);
+    stageStore.fetchStagesOfProject(projectId);
+  }, [projectId, stageStore]);
 
   const handleEdit = () => {};
 
   const openDeleteConfirmation = (stage: Stage | null) => {
     console.log(stage?._id);
-    projectStore.setStageToDelete(stage);
+    stageStore.setStageToDelete(stage);
   };
 
   const handleConfirmDelete = async () => {
-    if (projectStore.stageToDelete !== null) {
-      await projectStore.deleteStageFromProject(projectStore.stageToDelete?._id, projectId);
-      projectStore.setStageToDelete(null);
-      projectStore.fetchStagesOfProject(projectId);
+    if (stageStore.stageToDelete !== null) {
+      await stageStore.deleteStageFromProject(stageStore.stageToDelete?._id, projectId);
+      stageStore.setStageToDelete(null);
+      stageStore.fetchStagesOfProject(projectId);
     }
   };
 
   const handleCancelDelete = async () => {
-    projectStore.setStageToDelete(null);
+    stageStore.setStageToDelete(null);
   };
 
   return (
@@ -44,7 +44,7 @@ const StageProjectList: React.FC = observer(() => {
         />
       </div>
       <ul className="list-style">
-        {projectStore.projectStage.map((projectStage) => (
+        {stageStore.projectStage.map((projectStage) => (
           <li key={projectStage._id}>
             <StageCard
               stage={projectStage.stage}
@@ -55,7 +55,7 @@ const StageProjectList: React.FC = observer(() => {
         ))}
       </ul>
 
-      {projectStore.stageToDelete !== null && (
+      {stageStore.stageToDelete !== null && (
         <ConfirmationModal
           message="Are you sure you want to delete this stage?"
           onConfirm={handleConfirmDelete}

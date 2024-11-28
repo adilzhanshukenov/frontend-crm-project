@@ -1,10 +1,11 @@
 import { observer } from 'mobx-react-lite';
 import './proejctbar.css';
-import { projectStore } from '../../../stores/projectStore/ProjectStore';
 import Button from '../../shared/button/Button';
 import { useNavigate, useParams } from 'react-router-dom';
+import rootStore from '../../../stores/rootStore/RootStore';
 
 const ProjectBar = observer(() => {
+  const { projectStore } = rootStore;
   const { companyId } = useParams<{ companyId: string }>();
   const { projectId } = useParams<{ projectId: string }>();
 

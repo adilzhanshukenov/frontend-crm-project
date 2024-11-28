@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Company, CompanyFormData } from '../../../stores/companyStore/types';
-import { userStore } from '../../../stores/userStore/UserStore';
 import './createcompanyform.css';
+import rootStore from '../../../stores/rootStore/RootStore';
 
 interface CompanyFormProps {
   company?: Company | null;
@@ -10,6 +10,7 @@ interface CompanyFormProps {
 }
 
 export const CreateCompanyForm: React.FC<CompanyFormProps> = ({ company, onSubmit, handleClose }) => {
+  const { userStore } = rootStore;
   const [formData, setFormData] = useState<CompanyFormData>({ name: '', address: '', industry: '' });
 
   useEffect(() => {

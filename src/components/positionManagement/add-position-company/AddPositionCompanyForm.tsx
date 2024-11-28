@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
-import { modalStore } from '../../../stores/modalStore/ModalStore';
 import './addpositioncompany.css';
-import { positionStore } from '../../../stores/positionStore/PositionStore';
 import { Position, PositionFormData } from '../../../stores/positionStore/types';
 import { useRouteParams } from '../../../utils/useRouteParams';
 import CancelButton from '../../shared/cancel-button/CancelButton';
+import rootStore from '../../../stores/rootStore/RootStore';
 
 interface PositionFormProps {
   position?: Position | null;
@@ -13,6 +12,7 @@ interface PositionFormProps {
 
 const AddPositionCompanyForm: React.FC<PositionFormProps> = observer(({ position }) => {
   const { companyId } = useRouteParams();
+  const { positionStore, modalStore } = rootStore;
 
   const [formData, setFormData] = useState<PositionFormData>({ company: companyId, name: '', description: '' });
 

@@ -1,8 +1,8 @@
 import { observer } from 'mobx-react-lite';
 import { TabProps } from './types';
+import rootStore from '../../../stores/rootStore/RootStore';
 import Overview from '../../projectManagement/overview/Overview';
 import TaskList from '../../taskManagement/task-list/TaskList';
-import { tabStore } from '../../../stores/tabStore/TabStore';
 import './tabs.css';
 
 const Tab = ({ label, isActive, onClick }: TabProps) => {
@@ -14,6 +14,7 @@ const Tab = ({ label, isActive, onClick }: TabProps) => {
 };
 
 const Tabs: React.FC = observer(() => {
+  const { tabStore } = rootStore;
   const tabData = [
     { label: 'Overview', component: <Overview /> },
     { label: 'Tasks', component: <TaskList /> },

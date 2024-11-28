@@ -1,18 +1,19 @@
 import { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
-import { positionStore } from '../../../stores/positionStore/PositionStore';
 import { useRouteParams } from '../../../utils/useRouteParams';
 import Button from '../../shared/button/Button';
 import PositionCard from '../position-card/PositionCard';
 import { Position } from '../../../stores/positionStore/types';
 import ConfirmationModal from '../../shared/confirmation-modal/ConfirmationModal';
+import rootStore from '../../../stores/rootStore/RootStore';
 
 const PositionList: React.FC = observer(() => {
   const { companyId } = useRouteParams();
+  const { modalStore, positionStore } = rootStore;
 
   useEffect(() => {
     positionStore.fetchAllPositions(companyId);
-  }, [companyId]);
+  }, [companyId, positionStore]);
 
   const openDeleteConfirmation = async (position: Position | null) => {
     positionStore.setPositionToDelete(position);
@@ -30,6 +31,21 @@ const PositionList: React.FC = observer(() => {
     positionStore.setPositionToDelete(null);
   };
 
+  /**
+   * Open modal for create position
+   */
+  const openModalForCreate = () => {
+    positionStore.currentPosition = null;
+    modalStore.openAnyModal({ mode: 'create', activeModal: 'createEditPosition' });
+  };
+
+  /**
+   * Open modal for edit position
+   */
+  const openModalForEdit = () => {
+    modalStore.openAnyModal({ mode: 'edit', activeModal: 'createEditPosition' });
+  };
+
   if (positionStore.loading) return <p>Loading...</p>;
   if (positionStore.error) return <p>Error: {positionStore.error}</p>;
 
@@ -37,7 +53,7 @@ const PositionList: React.FC = observer(() => {
     <div>
       <div className="title-area">
         <h2>Positions</h2>
-        <Button title="Add position" onClick={positionStore.openModalForCreate} />
+        <Button title="Add position" onClick={openModalForCreate} />
       </div>
       <div>
         <ul className="list-style">
@@ -47,7 +63,7 @@ const PositionList: React.FC = observer(() => {
                 position={position}
                 onEdit={() => {
                   positionStore.currentPosition = position;
-                  positionStore.openModalForEdit();
+                  openModalForEdit();
                 }}
                 onDelete={() => openDeleteConfirmation(position)}
               />

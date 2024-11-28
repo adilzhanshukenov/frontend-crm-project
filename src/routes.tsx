@@ -11,11 +11,13 @@ import CompanyLayout from './layouts/companyLayout/CompanyLayout';
 import ProjectPage from './pages/project/projectPage/ProjectPage';
 import CompanySettings from './pages/company/companySettings/CompanySettings';
 import ProjectSettings from './pages/project/projectSettings/ProjectSettings';
+import { requireAuth } from './utils/authLoader/requireAuth';
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <MainLayout />,
+    loader: requireAuth,
     children: [
       {
         path: 'dashboard',
@@ -42,6 +44,7 @@ const router = createBrowserRouter([
   {
     path: '/companies/:companyId',
     element: <CompanyLayout />,
+    loader: requireAuth,
     children: [
       {
         path: 'project/:projectId',

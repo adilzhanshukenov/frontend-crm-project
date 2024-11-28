@@ -1,19 +1,19 @@
 import { useEffect } from 'react';
-import { modalStore } from '../../../stores/modalStore/ModalStore';
 import Button from '../../shared/button/Button';
 import { useRouteParams } from '../../../utils/useRouteParams';
 import { observer } from 'mobx-react-lite';
 import UserCard from '../../userManagement/user-card/UserCard';
 import { User } from '../../../stores/userStore/types';
 import ConfirmationModal from '../../shared/confirmation-modal/ConfirmationModal';
-import { companyStore } from '../../../stores/companyStore/CompanyStore';
+import rootStore from '../../../stores/rootStore/RootStore';
 
 const UserCompanyList: React.FC = observer(() => {
   const { companyId } = useRouteParams();
+  const { modalStore, companyStore } = rootStore;
 
   useEffect(() => {
     companyStore.fetchAllUsersOfCompany(companyId);
-  }, [companyId]);
+  }, [companyId, companyStore]);
 
   const openDeleteConfirmation = async (user: User | null) => {
     companyStore.setUserToDelete(user);

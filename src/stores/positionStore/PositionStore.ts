@@ -1,9 +1,10 @@
 import { action, makeAutoObservable, observable } from 'mobx';
 import { Position } from './types';
 import axiosInstance from '../../utils/axiosInstance';
-import { modalStore } from '../modalStore/ModalStore';
+import { RootStore } from '../rootStore/RootStore';
 
-class PositionStore {
+export class PositionStore {
+  @observable rootStore: RootStore;
   @observable positionList: Position[] = [];
   @observable currentPosition: Position | null = null;
   @observable positionToDelete: Position | null = null;
@@ -11,7 +12,8 @@ class PositionStore {
   @observable error: string | null = null;
   @observable success: boolean = false;
 
-  constructor() {
+  constructor(rootStore: RootStore) {
+    this.rootStore = rootStore;
     makeAutoObservable(this);
   }
 
@@ -101,21 +103,4 @@ class PositionStore {
       this.loading = false;
     }
   };
-
-  /**
-   * Open modal for create position
-   */
-  openModalForCreate = () => {
-    positionStore.currentPosition = null;
-    modalStore.openAnyModal({ mode: 'create', activeModal: 'createEditPosition' });
-  };
-
-  /**
-   * Open modal for edit position
-   */
-  openModalForEdit = () => {
-    modalStore.openAnyModal({ mode: 'edit', activeModal: 'createEditPosition' });
-  };
 }
-
-export const positionStore = new PositionStore();

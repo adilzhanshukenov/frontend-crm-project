@@ -1,19 +1,18 @@
 import { observer } from 'mobx-react-lite';
 import { useRouteParams } from '../../../utils/useRouteParams';
 import { useEffect, useState } from 'react';
-import { modalStore } from '../../../stores/modalStore/ModalStore';
 import CancelButton from '../../shared/cancel-button/CancelButton';
-import { ProjectStageFormData } from '../../../stores/projectStore/types';
-import { projectStore } from '../../../stores/projectStore/ProjectStore';
-import { companyStore } from '../../../stores/companyStore/CompanyStore';
+import { ProjectStageFormData } from '../../../stores/stageStore/types';
+import rootStore from '../../../stores/rootStore/RootStore';
 
 const AddStageProjectForm: React.FC = observer(() => {
   const { projectId, companyId } = useRouteParams();
+  const { modalStore, stageStore } = rootStore;
   const [formData, setFormData] = useState<ProjectStageFormData>({ project: projectId, stage: '', order: 0 });
 
   useEffect(() => {
-    companyStore.fetchAllStages(companyId);
-  }, [companyId]);
+    stageStore.fetchAllStages(companyId);
+  }, [companyId, stageStore]);
 
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -23,12 +22,12 @@ const AddStageProjectForm: React.FC = observer(() => {
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const convertOrderFormData = { ...formData, order: Number(formData.order) };
-    await projectStore.addStageToProject(convertOrderFormData);
-    projectStore.fetchStagesOfProject(projectId);
+    await stageStore.addStageToProject(convertOrderFormData);
+    stageStore.fetchStagesOfProject(projectId);
     modalStore.closeModal();
   };
 
-  const companyStages = companyStore.stageList.map((stage) => (
+  const companyStages = stageStore.stageList.map((stage) => (
     <option key={stage._id} value={stage._id}>
       {stage.name}
     </option>

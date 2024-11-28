@@ -1,19 +1,19 @@
 import { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useRouteParams } from '../../../utils/useRouteParams';
-import { modalStore } from '../../../stores/modalStore/ModalStore';
 import { User } from '../../../stores/userStore/types';
 import UserCard from '../../userManagement/user-card/UserCard';
 import Button from '../../shared/button/Button';
 import ConfirmationModal from '../../shared/confirmation-modal/ConfirmationModal';
-import { projectStore } from '../../../stores/projectStore/ProjectStore';
+import rootStore from '../../../stores/rootStore/RootStore';
 
 const ProjectUserList: React.FC = observer(() => {
   const { projectId } = useRouteParams();
+  const { modalStore, projectStore } = rootStore;
 
   useEffect(() => {
     projectStore.fetchUsersOfProject(projectId);
-  }, [projectId]);
+  }, [projectId, projectStore]);
 
   const openDeleteConfirmation = (user: User | null) => {
     projectStore.setUserToDelete(user);

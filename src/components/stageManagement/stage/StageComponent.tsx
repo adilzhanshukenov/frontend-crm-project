@@ -2,22 +2,23 @@ import { observer } from 'mobx-react-lite';
 import { useDroppable } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import TaskItem from '../../taskManagement/task-item/TaskItem';
-import { taskStore } from '../../../stores/taskStore/TaskStore';
 import { useRouteParams } from '../../../utils/useRouteParams';
 import { useEffect } from 'react';
-import { Stage } from '../../../stores/companyStore/types';
+import { Stage } from '../../../stores/stageStore/types';
+import rootStore from '../../../stores/rootStore/RootStore';
 
 interface StageComponentProps {
   stage: Stage;
 }
 
 const StageComponent: React.FC<StageComponentProps> = observer(({ stage }) => {
-  const { isOver, setNodeRef } = useDroppable({ id: stage._id as string });
   const { projectId } = useRouteParams();
+  const { isOver, setNodeRef } = useDroppable({ id: stage._id as string });
+  const { taskStore } = rootStore;
 
   useEffect(() => {
     taskStore.fetchAllTasks(projectId);
-  }, [projectId]);
+  }, [projectId, taskStore]);
 
   const tasks = taskStore.getTasksByStage(stage._id);
 
@@ -25,17 +26,13 @@ const StageComponent: React.FC<StageComponentProps> = observer(({ stage }) => {
     <div
       ref={setNodeRef}
       style={{
-        width: '300px',
-        height: '400px',
-        background: 'black',
+        border: '1px solid black',
         padding: '1rem',
-        borderRadius: '8px',
-        border: '1px solid #ddd',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',
+        minWidth: '200px',
+        backgroundColor: isOver ? 'lightyellow' : 'white',
+        transition: 'background-color 150ms ease',
+        color: 'black',
+        flex: '1',
       }}
     >
       <h3>{stage.name}</h3>

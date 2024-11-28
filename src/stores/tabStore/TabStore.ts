@@ -1,9 +1,12 @@
 import { action, makeAutoObservable, observable } from 'mobx';
+import { RootStore } from '../rootStore/RootStore';
 
-class TabStore {
+export class TabStore {
+  @observable rootStore: RootStore;
   @observable activeTab: number = 0;
 
-  constructor() {
+  constructor(rootStore: RootStore) {
+    this.rootStore = rootStore;
     const savedTab = sessionStorage.getItem('activeTab');
     this.activeTab = savedTab ? parseInt(savedTab, 10) : 0;
     makeAutoObservable(this);
@@ -15,5 +18,3 @@ class TabStore {
     sessionStorage.setItem('activeTab', String(index));
   };
 }
-
-export const tabStore = new TabStore();

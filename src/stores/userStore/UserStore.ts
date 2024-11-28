@@ -1,8 +1,10 @@
 import { action, makeAutoObservable, observable } from 'mobx';
 import { User, UserData } from './types';
 import axiosInstance from '../../utils/axiosInstance';
+import { RootStore } from '../rootStore/RootStore';
 
-class UserStore {
+export class UserStore {
+  @observable rootStore: RootStore;
   @observable users: User[] = [];
   @observable userToDelete: User | null = null;
   @observable selectedUser: string = '';
@@ -12,7 +14,8 @@ class UserStore {
   @observable error: string | null = null;
   @observable success: boolean = false;
 
-  constructor() {
+  constructor(rootStore: RootStore) {
+    this.rootStore = rootStore;
     makeAutoObservable(this);
   }
 
@@ -139,5 +142,3 @@ class UserStore {
     }
   };
 }
-
-export const userStore = new UserStore();

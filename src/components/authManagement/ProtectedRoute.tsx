@@ -8,7 +8,12 @@ type ProtectedRouteProps = {
   redirectTo?: string; // Redirect path if access is denied
 };
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ user, requiredRoles, children, redirectTo = '/login' }) => {
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
+  user,
+  requiredRoles,
+  children,
+  redirectTo = '/auth/login',
+}) => {
   const isAuthenticated = hasRole(user, requiredRoles);
   if (!isAuthenticated) {
     return <Navigate to={redirectTo} replace />;

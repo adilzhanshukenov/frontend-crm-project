@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
 import { User, UserData } from '../../../stores/userStore/types';
 import './userform.css';
-import { modalStore } from '../../../stores/modalStore/ModalStore';
-import { userStore } from '../../../stores/userStore/UserStore';
 import CancelButton from '../../shared/cancel-button/CancelButton';
+import rootStore from '../../../stores/rootStore/RootStore';
 
 interface UserFormProps {
   user: User | null;
 }
 
 const UserForm: React.FC<UserFormProps> = ({ user }) => {
+  const { userStore, modalStore } = rootStore;
   const [formData, setFormData] = useState<UserData>({ username: '', email: '', roles: [] });
 
   useEffect(() => {

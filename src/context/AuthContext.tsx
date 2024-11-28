@@ -25,12 +25,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const login = async (username: string, password: string) => {
     const response = await axiosInstance.post(`/auth/login`, { username, password });
-    console.log(response);
     const loggedInUser = response.data;
-    setUser(loggedInUser);
     localStorage.setItem('user', JSON.stringify(loggedInUser)); // Persist user to localStorage
     localStorage.setItem('token', response.data.access_token);
-    // Here you might store the user in local storage or session storage as well
+    setUser(loggedInUser);
   };
 
   // Logout function

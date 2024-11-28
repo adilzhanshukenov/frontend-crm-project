@@ -1,24 +1,23 @@
 import { action, makeAutoObservable, observable } from 'mobx';
-import { Company, CompanyFormData, CompanyUser, CompanyUserFormData, Stage } from './types';
+import { Company, CompanyFormData, CompanyUser, CompanyUserFormData } from './types';
 import axiosInstance from '../../utils/axiosInstance';
 import { User } from '../userStore/types';
-import { modalStore } from '../modalStore/ModalStore';
+import { RootStore } from '../rootStore/RootStore';
 
-class CompanyStore {
+export class CompanyStore {
+  @observable rootStore: RootStore;
   @observable companyList: Company[] = [];
   @observable selectedCompany: Company | null = null;
   @observable currectCompany: Company | null = null;
   @observable companyToDelete: Company | null = null;
   @observable companyUser: CompanyUser[] = [];
   @observable userToDelete: User | null = null;
-  @observable stageList: Stage[] = [];
-  @observable stageToDelete: Stage | null = null;
-  @observable currentStage: Stage | null = null;
   @observable loading: boolean = false;
   @observable error: string | null = null;
   @observable success: boolean = false;
 
-  constructor() {
+  constructor(rootStore: RootStore) {
+    this.rootStore = rootStore;
     makeAutoObservable(this);
   }
 
@@ -204,102 +203,4 @@ class CompanyStore {
       this.loading = false;
     }
   };
-
-  /**
-   *
-   * @param stage
-   */
-  @action
-  setStageToDelete = async (stage: Stage | null) => {
-    this.stageToDelete = stage;
-  };
-
-  /**
-   *
-   * @param stage
-   */
-  @action
-  addStageToCompany = async (stage: Stage) => {
-    this.loading = true;
-    this.error = null;
-    this.success = false;
-
-    try {
-      await axiosInstance.post(`/stage`, stage);
-      this.success = true;
-    } catch (error) {
-      this.error = error.message;
-    } finally {
-      this.loading = false;
-    }
-  };
-
-  /**
-   *
-   * @param companyId
-   */
-  @action
-  fetchAllStages = async (companyId: string | null): Promise<void> => {
-    this.loading = true;
-    this.error = null;
-    this.success = false;
-
-    try {
-      const response = await axiosInstance.get(`/stage/${companyId}`);
-      this.stageList = response.data;
-      this.success = true;
-    } catch (error) {
-      this.error = error.message;
-    } finally {
-      this.loading = false;
-    }
-  };
-
-  /**
-   *
-   * @param updatedStage
-   */
-  @action
-  updateStage = async (updatedStage: Stage) => {
-    this.loading = true;
-    this.error = null;
-    this.success = false;
-
-    try {
-      await axiosInstance.put(`/stage/${updatedStage._id}`, updatedStage);
-      this.success = true;
-    } catch (error) {
-      this.error = error.message;
-    } finally {
-      this.loading = false;
-    }
-  };
-
-  @action
-  deleteStage = async (stageId: string | undefined) => {
-    this.loading = true;
-    this.error = null;
-    this.success = false;
-
-    try {
-      await axiosInstance.delete(`stage/${stageId}`);
-      this.stageList = this.stageList.filter((stage) => stage._id !== stageId);
-      this.success = true;
-    } catch (error) {
-      this.error = error.message;
-    } finally {
-      this.loading = false;
-    }
-  };
-
-  openModalForCreate = () => {
-    this.currentStage = null;
-    modalStore.openAnyModal({ mode: 'create', activeModal: 'createEditStage' });
-  };
-
-  openModalForEdit = () => {
-    modalStore.openAnyModal({ mode: 'edit', activeModal: 'createEditStage' });
-  };
 }
-
-export const companyStore = new CompanyStore();

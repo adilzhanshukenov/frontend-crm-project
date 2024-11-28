@@ -1,10 +1,11 @@
 import { observer } from 'mobx-react-lite';
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { projectStore } from '../../../stores/projectStore/ProjectStore';
 import { Project } from '../../../stores/projectStore/types';
+import rootStore from '../../../stores/rootStore/RootStore';
 
 const ProjectList: React.FC = observer(() => {
+  const { projectStore } = rootStore;
   const { companyId } = useParams<{ companyId: string }>();
 
   const navigate = useNavigate();
@@ -13,7 +14,7 @@ const ProjectList: React.FC = observer(() => {
     if (companyId) {
       projectStore.fetchProjectsOfCompany(companyId);
     }
-  }, [companyId]);
+  }, [companyId, projectStore]);
 
   if (projectStore.loading) {
     return <div>Loading projects...</div>;

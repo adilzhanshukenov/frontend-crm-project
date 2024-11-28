@@ -1,8 +1,8 @@
 import React from 'react';
-import { userStore } from './userStore/UserStore';
+import rootStore from './rootStore/RootStore';
 
 export const StoreContext = React.createContext({
-  userStore,
+  rootStore,
 });
 
 export const useStores = () => React.useContext(StoreContext);

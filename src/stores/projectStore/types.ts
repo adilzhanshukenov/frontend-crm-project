@@ -1,5 +1,4 @@
-import { UniqueIdentifier } from '@dnd-kit/core';
-import { Company, Stage } from '../companyStore/types';
+import { Company } from '../companyStore/types';
 import { Position } from '../positionStore/types';
 import { User } from '../userStore/types';
 
@@ -35,19 +34,6 @@ export interface ProjectUserData {
   project?: string | null;
   position: string;
   role: string;
-}
-
-export interface ProjectStage {
-  _id?: UniqueIdentifier;
-  project: Project;
-  stage: Stage;
-  order: number;
-}
-
-export interface ProjectStageFormData {
-  project: string | null;
-  stage: string;
-  order: number;
 }
 
 export interface Role {

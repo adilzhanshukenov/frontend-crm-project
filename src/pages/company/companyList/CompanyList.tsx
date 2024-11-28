@@ -6,15 +6,15 @@ import { CreateCompanyForm } from '../../../components/companyManagement/create-
 import HeaderTitle from '../../../components/shared/header-title/HeaderTitle';
 import CompanyCard from '../../../components/companyManagement/company-card/CompanyCard';
 import Modal from '../../../components/shared/modal/Modal';
-import { companyStore } from '../../../stores/companyStore/CompanyStore';
-import { modalStore } from '../../../stores/modalStore/ModalStore';
 import { Company } from '../../../stores/companyStore/types';
 import Button from '../../../components/shared/button/Button';
 import ConfirmationModal from '../../../components/shared/confirmation-modal/ConfirmationModal';
 import { useAuth } from '../../../context/useAuth';
+import rootStore from '../../../stores/rootStore/RootStore';
 
 const CompanyList: React.FC = observer(() => {
   const { isAuthenticated } = useAuth();
+  const { companyStore, modalStore } = rootStore;
   const navigate = useNavigate();
 
   if (!isAuthenticated) {
@@ -23,7 +23,7 @@ const CompanyList: React.FC = observer(() => {
 
   useEffect(() => {
     companyStore.fetchAllCompanies();
-  }, []);
+  }, [companyStore]);
 
   const handleOpenModalForCreate = () => {
     companyStore.currectCompany = null;

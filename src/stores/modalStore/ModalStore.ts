@@ -1,16 +1,19 @@
 import { action, makeAutoObservable, observable } from 'mobx';
+import { RootStore } from '../rootStore/RootStore';
 
 interface ModalProps {
   mode: 'create' | 'edit' | 'delete';
   activeModal: string;
 }
 
-class ModalStore {
+export class ModalStore {
+  @observable rootStore: RootStore;
   @observable isOpen: boolean = false;
   @observable mode: 'create' | 'edit' | 'delete' = 'create';
   @observable activeModal: string | null = null;
 
-  constructor() {
+  constructor(rootStore: RootStore) {
+    this.rootStore = rootStore;
     makeAutoObservable(this);
   }
 
@@ -40,5 +43,3 @@ class ModalStore {
     this.activeModal = null;
   };
 }
-
-export const modalStore = new ModalStore();

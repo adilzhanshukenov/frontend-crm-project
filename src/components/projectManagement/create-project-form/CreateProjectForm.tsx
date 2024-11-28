@@ -1,10 +1,9 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { modalStore } from '../../../stores/modalStore/ModalStore';
-import { projectStore } from '../../../stores/projectStore/ProjectStore';
 import './createprojectform.css';
 import { observer } from 'mobx-react-lite';
 import CancelButton from '../../shared/cancel-button/CancelButton';
+import rootStore from '../../../stores/rootStore/RootStore';
 
 interface CreateProjectFormProps {
   name: string;
@@ -17,6 +16,7 @@ interface CreateProjectFormProps {
 
 const CreateProjectForm: React.FC = observer(() => {
   const { companyId } = useParams<{ companyId: string }>();
+  const { projectStore, modalStore } = rootStore;
 
   const [formData, setFormData] = useState<CreateProjectFormProps>({
     name: '',
@@ -28,9 +28,8 @@ const CreateProjectForm: React.FC = observer(() => {
   });
 
   useEffect(() => {
-    projectStore.getProjectStatuses();
     projectStore.fetchProjectsOfCompany(companyId);
-  }, [companyId]);
+  }, [companyId, projectStore]);
 
   const handleFormSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -51,12 +50,6 @@ const CreateProjectForm: React.FC = observer(() => {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  const projectStatuses = projectStore.projectStatuses.map((projectStatus) => (
-    <option key={projectStatus} value={projectStatus}>
-      {projectStatus}
-    </option>
-  ));
-
   return (
     <form className="modal-form" onSubmit={handleFormSubmit}>
       <h2>Create project</h2>
@@ -75,13 +68,6 @@ const CreateProjectForm: React.FC = observer(() => {
       <div className="modal-form-inputs">
         <label>End date:</label>
         <input name="end_date" value={formData.end_date} type="date" onChange={handleChange} />
-      </div>
-      <div className="modal-form-inputs">
-        <label>Status:</label>
-        <select value={formData.status} name="status" onChange={handleChange}>
-          <option>Select status</option>
-          {projectStatuses}
-        </select>
       </div>
       <button type="submit">Create</button>
       <CancelButton />

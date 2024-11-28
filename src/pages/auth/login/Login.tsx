@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import './login.css';
 import { useAuth } from '../../../context/useAuth';
 
@@ -9,14 +9,15 @@ const Login: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   const { login } = useAuth();
-
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       await login(username, password);
-      navigate('/users');
+      const redirectUrl = searchParams.get('redirectTo') || '/companies'; // Default to dashboard
+      navigate(redirectUrl, { replace: true });
     } catch (err) {
       setError(err.message);
     }

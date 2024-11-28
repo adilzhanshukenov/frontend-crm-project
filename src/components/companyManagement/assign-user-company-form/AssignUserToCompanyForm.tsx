@@ -1,16 +1,14 @@
 import { useState } from 'react';
-import { modalStore } from '../../../stores/modalStore/ModalStore';
-import { userStore } from '../../../stores/userStore/UserStore';
 import './assignusertocompany.css';
-import { positionStore } from '../../../stores/positionStore/PositionStore';
 import { observer } from 'mobx-react-lite';
 import { useRouteParams } from '../../../utils/useRouteParams';
 import CancelButton from '../../shared/cancel-button/CancelButton';
 import { CompanyUserFormData } from '../../../stores/companyStore/types';
-import { companyStore } from '../../../stores/companyStore/CompanyStore';
+import rootStore from '../../../stores/rootStore/RootStore';
 
 const AssignUserToCompanyForm: React.FC = observer(() => {
   const { companyId } = useRouteParams();
+  const { modalStore, userStore, positionStore, companyStore } = rootStore;
 
   const [user, setUser] = useState<string>('');
   const [position, setPosition] = useState<string>('');

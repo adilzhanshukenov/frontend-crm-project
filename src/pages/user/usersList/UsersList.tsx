@@ -1,19 +1,20 @@
 import { observer } from 'mobx-react-lite';
 import { useEffect } from 'react';
-import { userStore } from '../../../stores/userStore/UserStore';
 import HeaderTitle from '../../../components/shared/header-title/HeaderTitle';
 import UserCard from '../../../components/userManagement/user-card/UserCard';
-import { modalStore } from '../../../stores/modalStore/ModalStore';
 import { User } from '../../../stores/userStore/types';
 import ConfirmationModal from '../../../components/shared/confirmation-modal/ConfirmationModal';
 import Modal from '../../../components/shared/modal/Modal';
 import UserForm from '../../../components/userManagement/user-form/UserForm';
 import './userlist.css';
+import rootStore from '../../../stores/rootStore/RootStore';
 
 const UsersList: React.FC = observer(() => {
+  const { userStore, modalStore } = rootStore;
+
   useEffect(() => {
     userStore.fetchAllUsers();
-  }, []);
+  }, [userStore]);
 
   const handleConfirmDelete = () => {
     if (userStore.userToDelete !== null) {

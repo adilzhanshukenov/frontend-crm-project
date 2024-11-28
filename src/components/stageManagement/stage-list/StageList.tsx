@@ -4,50 +4,60 @@ import Button from '../../shared/button/Button';
 import ConfirmationModal from '../../shared/confirmation-modal/ConfirmationModal';
 import StageCard from '../stage-card/StageCard';
 import { observer } from 'mobx-react-lite';
-import { companyStore } from '../../../stores/companyStore/CompanyStore';
-import { Stage } from '../../../stores/companyStore/types';
+import { Stage } from '../../../stores/stageStore/types';
+import rootStore from '../../../stores/rootStore/RootStore';
 
 const StageList: React.FC = observer(() => {
   const { companyId } = useRouteParams();
+  const { stageStore, modalStore } = rootStore;
 
   useEffect(() => {
-    companyStore.fetchAllStages(companyId);
-  }, [companyId]);
+    stageStore.fetchAllStages(companyId);
+  }, [companyId, stageStore]);
 
   const openDeleteConfirmation = (stage: Stage | null) => {
-    companyStore.setStageToDelete(stage);
+    stageStore.setStageToDelete(stage);
   };
 
   const handleConfirmDelete = async () => {
-    if (companyStore.stageToDelete !== null) {
-      await companyStore.deleteStage(companyStore.stageToDelete?._id);
-      companyStore.setStageToDelete(null);
-      companyStore.fetchAllStages(companyId);
+    if (stageStore.stageToDelete !== null) {
+      await stageStore.deleteStage(stageStore.stageToDelete?._id);
+      stageStore.setStageToDelete(null);
+      stageStore.fetchAllStages(companyId);
     }
   };
 
   const handleCancelDelete = async () => {
-    companyStore.setStageToDelete(null);
+    stageStore.setStageToDelete(null);
   };
 
-  if (companyStore.loading) return <p>Loading...</p>;
-  if (companyStore.error) return <p>Error: {companyStore.error}</p>;
+  const openModalForCreate = () => {
+    stageStore.currentStage = null;
+    modalStore.openAnyModal({ mode: 'create', activeModal: 'createEditStage' });
+  };
+
+  const openModalForEdit = () => {
+    modalStore.openAnyModal({ mode: 'edit', activeModal: 'createEditStage' });
+  };
+
+  if (stageStore.loading) return <p>Loading...</p>;
+  if (stageStore.error) return <p>Error: {stageStore.error}</p>;
 
   return (
     <div>
       <div className="title-area">
         <h2>Stages</h2>
-        <Button title="Add stage" onClick={companyStore.openModalForCreate} />
+        <Button title="Add stage" onClick={openModalForCreate} />
       </div>
       <div>
         <ul className="list-style">
-          {companyStore.stageList?.map((stage) => (
+          {stageStore.stageList?.map((stage) => (
             <li key={stage._id}>
               <StageCard
                 stage={stage}
                 onEdit={() => {
-                  companyStore.currentStage = stage;
-                  companyStore.openModalForEdit();
+                  stageStore.currentStage = stage;
+                  openModalForEdit();
                 }}
                 onDelete={() => openDeleteConfirmation(stage)}
               />
@@ -55,7 +65,7 @@ const StageList: React.FC = observer(() => {
           ))}
         </ul>
       </div>
-      {companyStore.stageToDelete !== null && (
+      {stageStore.stageToDelete !== null && (
         <ConfirmationModal
           message="Are you sure you want to delete this stage?"
           onConfirm={handleConfirmDelete}

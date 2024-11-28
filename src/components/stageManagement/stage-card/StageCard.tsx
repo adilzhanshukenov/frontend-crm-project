@@ -1,7 +1,7 @@
 import { FormEvent } from 'react';
 import Button from '../../shared/button/Button';
 import './stagecard.css';
-import { Stage } from '../../../stores/companyStore/types';
+import { Stage } from '../../../stores/stageStore/types';
 
 interface StageCardProps {
   stage: Stage;

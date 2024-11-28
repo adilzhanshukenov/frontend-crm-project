@@ -1,7 +1,7 @@
 import { UniqueIdentifier } from '@dnd-kit/core';
 import { Project } from '../projectStore/types';
-import { Stage } from '../companyStore/types';
 import { User } from '../userStore/types';
+import { Stage } from '../stageStore/types';
 
 export interface Task {
   _id: UniqueIdentifier;
