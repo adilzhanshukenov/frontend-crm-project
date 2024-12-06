@@ -1,15 +1,8 @@
-.list-style {
-    list-style: none;
-    padding: 0;
+.company-card-list {
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
+    flex-direction: row;
     gap: 5px;
-    justify-content: center;
-}
-
-.list-style li {
-    width: 100%;
-
 }
 
 .company-title-area {
@@ -21,8 +14,9 @@
 }
 
 @media (max-width: 768px) {
-    .list-style {
+    .company-card-list {
         justify-content: start;
+        flex-direction: column;
         /* Stack sidebar above main content */
     }
 }

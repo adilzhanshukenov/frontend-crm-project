@@ -1,9 +1,10 @@
 import { observer } from 'mobx-react-lite';
-import CancelButton from '../../shared/cancel-button/CancelButton';
+import CancelButton from '../../shared/buttons/cancel-button/CancelButton';
 import { FormEvent, useEffect, useState } from 'react';
 import { TaskData } from '../../../stores/taskStore/types';
 import { useRouteParams } from '../../../utils/useRouteParams';
 import rootStore from '../../../stores/rootStore/RootStore';
+import { Button, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
 
 interface TaskFormData {
   name: string;
@@ -33,7 +34,7 @@ const AddTaskForm: React.FC = observer(() => {
     stage: '',
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent<string>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
@@ -52,47 +53,63 @@ const AddTaskForm: React.FC = observer(() => {
   };
 
   const taskStatuses = taskStore.taskStatuses.map((taskStatus) => (
-    <option key={taskStatus} value={taskStatus}>
+    <MenuItem key={taskStatus} value={taskStatus}>
       {taskStatus}
-    </option>
+    </MenuItem>
   ));
 
   const taskPriorities = taskStore.taskPriorities.map((taskPriority) => (
-    <option key={taskPriority} value={taskPriority}>
+    <MenuItem key={taskPriority} value={taskPriority}>
       {taskPriority}
-    </option>
+    </MenuItem>
   ));
 
   return (
     <form className="modal-form" onSubmit={handleFormSubmit}>
-      <div className="modal-form-inputs">
-        <label>Name:</label>
-        <input type="text" name="name" value={formData.name} onChange={handleChange} />
-      </div>
-      <div className="modal-form-inputs">
-        <label>Description:</label>
-        <input type="text" name="description" value={formData.description} onChange={handleChange} />
-      </div>
-      <div className="modal-form-inputs">
-        <label>Status:</label>
-        <select name="status" value={formData.status} onChange={handleChange}>
-          <option>Select status</option>
-          {taskStatuses}
-        </select>
-      </div>
-      <div className="modal-form-inputs">
-        <label>Due date:</label>
-        <input type="date" name="due_date" value={formData.due_date} onChange={handleChange} />
-      </div>
-      <div className="modal-form-inputs">
-        <label>Priority:</label>
-        <select name="priority" value={formData.priority} onChange={handleChange}>
-          <option>Select priority</option>
-          {taskPriorities}
-        </select>
-      </div>
-      <button type="submit">Add task</button>
-      <CancelButton />
+      <TextField
+        type="text"
+        variant="outlined"
+        label="Name"
+        name="name"
+        value={formData.name}
+        onChange={handleChange}
+      />
+      <TextField
+        type="text"
+        variant="outlined"
+        label="Description"
+        name="description"
+        value={formData.description}
+        onChange={handleChange}
+      />
+
+      <Select variant="outlined" name="status" value={formData.status} onChange={handleChange}>
+        <MenuItem disabled value="">
+          Select status
+        </MenuItem>
+        {taskStatuses}
+      </Select>
+
+      <TextField
+        type="date"
+        variant="outlined"
+        label="Due date"
+        name="due_date"
+        value={formData.due_date}
+        onChange={handleChange}
+        placeholder="Choose date"
+      />
+
+      <Select variant="standard" name="priority" value={formData.priority} onChange={handleChange}>
+        <MenuItem disabled value="">
+          Select priority
+        </MenuItem>
+        {taskPriorities}
+      </Select>
+      <Button type="submit" variant="contained">
+        Add task
+      </Button>
+      <CancelButton onClick={() => taskStore.fetchAllTasks(projectId)} />
     </form>
   );
 });

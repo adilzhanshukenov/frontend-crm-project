@@ -1,6 +1,5 @@
-import { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
-import Button from '../../shared/button/Button';
+import Button from '../../shared/buttons/button/Button';
 import { useRouteParams } from '../../../utils/useRouteParams';
 import StageCard from '../../stageManagement/stage-card/StageCard';
 import ConfirmationModal from '../../shared/confirmation-modal/ConfirmationModal';
@@ -10,10 +9,6 @@ import rootStore from '../../../stores/rootStore/RootStore';
 const StageProjectList: React.FC = observer(() => {
   const { projectId } = useRouteParams();
   const { stageStore, modalStore } = rootStore;
-
-  useEffect(() => {
-    stageStore.fetchStagesOfProject(projectId);
-  }, [projectId, stageStore]);
 
   const handleEdit = () => {};
 

@@ -1,14 +1,14 @@
 import { observer } from 'mobx-react-lite';
 import { useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { NavLink, useParams } from 'react-router-dom';
 import { Project } from '../../../stores/projectStore/types';
 import rootStore from '../../../stores/rootStore/RootStore';
+import './projectList.css';
+import { LinearProgress } from '@mui/material';
 
 const ProjectList: React.FC = observer(() => {
   const { projectStore } = rootStore;
   const { companyId } = useParams<{ companyId: string }>();
-
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (companyId) {
@@ -17,7 +17,11 @@ const ProjectList: React.FC = observer(() => {
   }, [companyId, projectStore]);
 
   if (projectStore.loading) {
-    return <div>Loading projects...</div>;
+    return (
+      <div style={{ width: '100%' }}>
+        <LinearProgress />
+      </div>
+    );
   }
 
   if (projectStore.error) {
@@ -25,20 +29,24 @@ const ProjectList: React.FC = observer(() => {
   }
 
   const handleProjectClick = (project: Project) => {
-    navigate(`project/${project._id}`);
     projectStore.setSelectedProject(project._id);
   };
 
   return (
-    <div>
+    <div className="project-list">
       <h2>Projects</h2>
-      <ul>
+      <div className="project-list-items">
         {projectStore.projects.map((project) => (
-          <li key={project._id} onClick={() => handleProjectClick(project)}>
+          <NavLink
+            onClick={() => handleProjectClick(project)}
+            key={project._id}
+            className={({ isActive }) => (isActive ? 'project-item active' : 'project-item')}
+            to={`project/${project._id}`}
+          >
             {project.name}
-          </li>
+          </NavLink>
         ))}
-      </ul>
+      </div>
     </div>
   );
 });

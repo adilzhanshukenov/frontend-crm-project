@@ -2,15 +2,16 @@ import { action, makeAutoObservable, observable, runInAction } from 'mobx';
 import { Task, TaskData, TaskStageUser, TaskStageUserData } from './types';
 import axiosInstance from '../../utils/axiosInstance';
 import { UniqueIdentifier } from '@dnd-kit/core';
-import { User } from '../userStore/types';
 import { RootStore } from '../rootStore/RootStore';
+import { User } from '../userStore/types';
 
 export class TaskStore {
   @observable rootStore: RootStore;
   @observable tasks: Task[] = [];
   @observable taskPriorities: string[] = [];
   @observable taskStatuses: string[] = [];
-  @observable taskStageUser: TaskStageUser[] = [];
+  @observable taskStageUsers: TaskStageUser[] = [];
+  @observable user: User | null = null;
   @observable previousState: Task[] | null = null; // For rollback
   @observable firstStage: string = '';
   @observable loading: boolean = false;
@@ -50,7 +51,29 @@ export class TaskStore {
 
     try {
       const response = await axiosInstance.post(`task-stage-user`, taskStageUser);
-      this.taskStageUser = response.data;
+      this.taskStageUsers = response.data;
+      this.success = true;
+    } catch (error) {
+      this.error = error.message;
+    } finally {
+      this.loading = false;
+    }
+  };
+
+  @action
+  assignUserToTask = async (taskId: UniqueIdentifier, userId: string) => {
+    this.loading = true;
+    this.error = null;
+    this.success = false;
+
+    try {
+      const response = await axiosInstance.post(`task-stage-user/assign-user`, { taskId, userId });
+      const updatedTaskStageUser = response.data;
+
+      const taskStageUser = this.taskStageUsers.find((tsu) => tsu.task._id === taskId);
+      if (taskStageUser) {
+        taskStageUser.user._id = updatedTaskStageUser.user;
+      }
       this.success = true;
     } catch (error) {
       this.error = error.message;
@@ -66,16 +89,8 @@ export class TaskStore {
     this.success = false;
 
     try {
-      const [tasksResponse, taskStageResponse] = await Promise.all([
-        axiosInstance.get(`task/${projectId}`),
-        axiosInstance.get(`task-stage-user?projectId=${projectId}`),
-      ]);
-
-      runInAction(() => {
-        this.tasks = tasksResponse.data;
-        console.log('TaskStageUser: ', taskStageResponse.data);
-        this.taskStageUser = taskStageResponse.data;
-      });
+      const tasksResponse = await axiosInstance.get(`task/${projectId}`);
+      this.tasks = tasksResponse.data;
 
       this.success = true;
     } catch (error) {
@@ -139,7 +154,7 @@ export class TaskStore {
         task.stage._id = stageId;
       }
 
-      const taskStageUser = this.taskStageUser.find((tsu) => tsu.task._id === task?._id);
+      const taskStageUser = this.taskStageUsers.find((tsu) => tsu.task._id === task?._id);
       if (taskStageUser) {
         taskStageUser.stage._id = stageId;
         if (userId) {
@@ -189,7 +204,19 @@ export class TaskStore {
   };
 
   @action
-  getUsersForTask = (taskId: UniqueIdentifier): User[] => {
-    return this.taskStageUser.filter((tsu) => tsu.task._id === taskId).map((tsu) => tsu.user);
+  getUserForTask = async (taskId: UniqueIdentifier) => {
+    this.loading = true;
+    this.error = null;
+    this.success = false;
+
+    try {
+      const response = await axiosInstance.get(`task-stage-user/user/${taskId}`);
+      this.user = response.data.user;
+      this.success = true;
+    } catch (error) {
+      this.error = error.message;
+    } finally {
+      this.loading = false;
+    }
   };
 }

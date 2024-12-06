@@ -1,14 +1,27 @@
-li {
-    width: 100%;
+.company-card {
+    flex: 1 1 calc(50% - 5px);
+    min-width: 400px;
+    cursor: pointer;
+    background-color: rgb(242, 242, 242);
 }
 
-.company-card {
-    border: 1px solid white;
+.company-card-content {
     border-radius: 5px;
     cursor: pointer;
     display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.company-text {
+    display: flex;
     flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    padding: 5px;
+    gap: 5px
+}
+
+@media (max-width: 768px) {
+    .company-card {
+        flex: 1;
+        /* Switch to one item per row on smaller screens */
+    }
 }

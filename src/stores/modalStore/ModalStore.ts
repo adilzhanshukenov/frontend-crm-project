@@ -11,11 +11,17 @@ export class ModalStore {
   @observable isOpen: boolean = false;
   @observable mode: 'create' | 'edit' | 'delete' = 'create';
   @observable activeModal: string | null = null;
+  @observable drawerOpen: boolean = false;
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
     makeAutoObservable(this);
   }
+
+  @action
+  setDrawerOpen = (newOpen: boolean) => {
+    this.drawerOpen = newOpen;
+  };
 
   /**
    *

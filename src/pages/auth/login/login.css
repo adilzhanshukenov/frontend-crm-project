@@ -2,7 +2,7 @@
     text-align: center;
 }
 
-.login-form{
+.login-form {
     display: flex;
     flex-direction: column;
     gap: 5px;
@@ -13,4 +13,5 @@
 
 .project-title {
     font-size: 32px;
+    margin-bottom: 10px;
 }

@@ -1,5 +1,7 @@
 import { useNavigate } from 'react-router-dom';
-import Button from '../../shared/button/Button';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { Tooltip } from '@mui/material';
+import './logout.css';
 
 const Logout: React.FC = () => {
   const navigate = useNavigate();
@@ -15,7 +17,20 @@ const Logout: React.FC = () => {
     }
   };
 
-  return <Button title="Log out" onClick={handleLogOut} />;
+  return (
+    <Tooltip title="Log out" arrow>
+      <LogoutIcon
+        className="logout-button"
+        onClick={handleLogOut}
+        sx={{
+          transition: 'transform 0.3s ease', // Smooth transition
+          '&:hover': {
+            transform: 'scale(1.2)', // Scale on hover
+          },
+        }}
+      />
+    </Tooltip>
+  );
 };
 
 export default Logout;

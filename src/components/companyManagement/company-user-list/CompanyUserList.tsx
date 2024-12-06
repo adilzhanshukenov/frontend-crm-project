@@ -1,5 +1,4 @@
-import { useEffect } from 'react';
-import Button from '../../shared/button/Button';
+import Button from '../../shared/buttons/button/Button';
 import { useRouteParams } from '../../../utils/useRouteParams';
 import { observer } from 'mobx-react-lite';
 import UserCard from '../../userManagement/user-card/UserCard';
@@ -7,13 +6,9 @@ import { User } from '../../../stores/userStore/types';
 import ConfirmationModal from '../../shared/confirmation-modal/ConfirmationModal';
 import rootStore from '../../../stores/rootStore/RootStore';
 
-const UserCompanyList: React.FC = observer(() => {
+const CompanyUserList: React.FC = observer(() => {
   const { companyId } = useRouteParams();
   const { modalStore, companyStore } = rootStore;
-
-  useEffect(() => {
-    companyStore.fetchAllUsersOfCompany(companyId);
-  }, [companyId, companyStore]);
 
   const openDeleteConfirmation = async (user: User | null) => {
     companyStore.setUserToDelete(user);
@@ -33,7 +28,6 @@ const UserCompanyList: React.FC = observer(() => {
 
   const handleEdit = () => {};
 
-  if (companyStore.loading) return <p>Loading...</p>;
   if (companyStore.error) return <p>Error: {companyStore.error}</p>;
 
   return (
@@ -65,4 +59,4 @@ const UserCompanyList: React.FC = observer(() => {
   );
 });
 
-export default UserCompanyList;
+export default CompanyUserList;

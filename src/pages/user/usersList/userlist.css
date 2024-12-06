@@ -7,10 +7,6 @@
     justify-content: center;
 }
 
-li {
-    width: 100%;
-}
-
 .user-title-area {
     display: flex;
     justify-content: space-between;

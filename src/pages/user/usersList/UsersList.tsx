@@ -8,6 +8,7 @@ import Modal from '../../../components/shared/modal/Modal';
 import UserForm from '../../../components/userManagement/user-form/UserForm';
 import './userlist.css';
 import rootStore from '../../../stores/rootStore/RootStore';
+import LinearProgress from '@mui/material/LinearProgress';
 
 const UsersList: React.FC = observer(() => {
   const { userStore, modalStore } = rootStore;
@@ -31,7 +32,12 @@ const UsersList: React.FC = observer(() => {
     userStore.setUserToDelete(null);
   };
 
-  if (userStore.loading) return <p>Loading...</p>;
+  if (userStore.loading)
+    return (
+      <div style={{ width: '100%' }}>
+        <LinearProgress />
+      </div>
+    );
   if (userStore.error) return <p>Error: {userStore.error}</p>;
 
   const usersList = (
@@ -53,6 +59,7 @@ const UsersList: React.FC = observer(() => {
 
   return (
     <div>
+      {}
       <div className="user-title-area">
         <HeaderTitle title="Users" />
       </div>

@@ -1,7 +1,10 @@
 import { FormEvent } from 'react';
-import Button from '../../shared/button/Button';
 import { Position } from '../../../stores/positionStore/types';
 import './positioncard.css';
+import { Card, CardContent, CardHeader } from '@mui/material';
+import EditIconButton from '../../shared/buttons/edit-icon-button/EditIconButton';
+import DeleteIconButton from '../../shared/buttons/delete-icon-button/DeleteIconButton';
+import styled from '@emotion/styled';
 
 interface PositionCardProps {
   position: Position;
@@ -9,30 +12,38 @@ interface PositionCardProps {
   onDelete: () => void;
 }
 
+const HoverCard = styled(Card)({
+  backgroundColor: 'rgb(242, 242, 242)',
+});
+
 const PositionCard: React.FC<PositionCardProps> = ({ position, onEdit, onDelete }) => {
   return (
-    <div className="position-card">
-      <div>
-        <h3>{position.name}</h3>
+    <HoverCard className="position-card">
+      <CardHeader
+        title={position.name}
+        action={
+          <div className="card-buttons">
+            <EditIconButton
+              title="Edit"
+              onClick={(e: FormEvent) => {
+                e.stopPropagation();
+                onEdit();
+              }}
+            />
+            <DeleteIconButton
+              title="Delete"
+              onClick={(e: FormEvent) => {
+                e.preventDefault();
+                onDelete();
+              }}
+            />
+          </div>
+        }
+      ></CardHeader>
+      <CardContent>
         <p>{position.description}</p>
-      </div>
-      <div className="card-buttons">
-        <Button
-          title="Edit"
-          onClick={(e: FormEvent) => {
-            e.stopPropagation();
-            onEdit();
-          }}
-        />
-        <Button
-          title="Delete"
-          onClick={(e: FormEvent) => {
-            e.preventDefault();
-            onDelete();
-          }}
-        />
-      </div>
-    </div>
+      </CardContent>
+    </HoverCard>
   );
 };
 

@@ -1,7 +1,10 @@
 import { FormEvent } from 'react';
-import Button from '../../shared/button/Button';
 import './stagecard.css';
 import { Stage } from '../../../stores/stageStore/types';
+import { Card, CardContent, CardHeader } from '@mui/material';
+import EditIconButton from '../../shared/buttons/edit-icon-button/EditIconButton';
+import DeleteIconButton from '../../shared/buttons/delete-icon-button/DeleteIconButton';
+import styled from '@emotion/styled';
 
 interface StageCardProps {
   stage: Stage;
@@ -9,30 +12,38 @@ interface StageCardProps {
   onDelete: () => void;
 }
 
+const HoverCard = styled(Card)({
+  backgroundColor: 'rgb(242, 242, 242)',
+});
+
 const StageCard: React.FC<StageCardProps> = ({ stage, onEdit, onDelete }) => {
   return (
-    <div className="stage-card">
-      <div>
-        <h3>{stage?.name}</h3>
-        <p>{stage?.description}</p>
-      </div>
-      <div className="card-buttons">
-        <Button
-          title="Edit"
-          onClick={(e: FormEvent) => {
-            e.preventDefault();
-            onEdit();
-          }}
-        />
-        <Button
-          title="Delete"
-          onClick={(e: FormEvent) => {
-            e.preventDefault();
-            onDelete();
-          }}
-        />
-      </div>
-    </div>
+    <HoverCard className="stage-card">
+      <CardHeader
+        title={stage?.name}
+        action={
+          <div className="card-buttons">
+            <EditIconButton
+              title="Edit"
+              onClick={(e: FormEvent) => {
+                e.preventDefault();
+                onEdit();
+              }}
+            />
+            <DeleteIconButton
+              title="Delete"
+              onClick={(e: FormEvent) => {
+                e.preventDefault();
+                onDelete();
+              }}
+            />
+          </div>
+        }
+      ></CardHeader>
+      <CardContent>
+        <p>Description: {stage?.description}</p>
+      </CardContent>
+    </HoverCard>
   );
 };
 

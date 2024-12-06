@@ -1,6 +1,5 @@
-import { useEffect } from 'react';
 import { useRouteParams } from '../../../utils/useRouteParams';
-import Button from '../../shared/button/Button';
+import Button from '../../shared/buttons/button/Button';
 import ConfirmationModal from '../../shared/confirmation-modal/ConfirmationModal';
 import StageCard from '../stage-card/StageCard';
 import { observer } from 'mobx-react-lite';
@@ -10,10 +9,6 @@ import rootStore from '../../../stores/rootStore/RootStore';
 const StageList: React.FC = observer(() => {
   const { companyId } = useRouteParams();
   const { stageStore, modalStore } = rootStore;
-
-  useEffect(() => {
-    stageStore.fetchAllStages(companyId);
-  }, [companyId, stageStore]);
 
   const openDeleteConfirmation = (stage: Stage | null) => {
     stageStore.setStageToDelete(stage);
@@ -40,7 +35,6 @@ const StageList: React.FC = observer(() => {
     modalStore.openAnyModal({ mode: 'edit', activeModal: 'createEditStage' });
   };
 
-  if (stageStore.loading) return <p>Loading...</p>;
   if (stageStore.error) return <p>Error: {stageStore.error}</p>;
 
   return (

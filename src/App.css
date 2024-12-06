@@ -16,8 +16,8 @@ Global styles
   justify-content: space-between;
   align-items: center;
   flex-direction: row;
-  padding-bottom: 10px;
   padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .card-buttons {
@@ -43,3 +43,12 @@ Modal form styles
   justify-content: start;
   padding-bottom: 5px;
 }
+
+
+.text-field {
+  border-radius: 5px;
+}
+
+/**
+Common colors
+**/

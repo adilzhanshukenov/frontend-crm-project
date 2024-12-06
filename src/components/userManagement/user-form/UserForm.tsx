@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { User, UserData } from '../../../stores/userStore/types';
 import './userform.css';
-import CancelButton from '../../shared/cancel-button/CancelButton';
+import CancelButton from '../../shared/buttons/cancel-button/CancelButton';
 import rootStore from '../../../stores/rootStore/RootStore';
+import { Button, TextField } from '@mui/material';
 
 interface UserFormProps {
   user: User | null;
@@ -44,17 +45,31 @@ const UserForm: React.FC<UserFormProps> = ({ user }) => {
   return (
     <form className="user-form" onSubmit={handleFormSubmit}>
       <h2>Update user</h2>
-      <div className="user-form-inputs">
-        <label>Username:</label>
-        <input type="text" name="username" value={formData.username} onChange={handleChange} />
-      </div>
-      <div className="user-form-inputs">
-        <label>Email:</label>
-        <input type="email" name="email" value={formData.email} onChange={handleChange} />
-      </div>
 
-      <button type="submit">Update user</button>
-      <CancelButton />
+      <TextField
+        className="text-field"
+        variant="filled"
+        type="text"
+        label="Username"
+        name="username"
+        value={formData.username}
+        onChange={handleChange}
+      />
+
+      <TextField
+        className="text-field"
+        variant="filled"
+        type="emil"
+        label="Email"
+        name="email"
+        value={formData.email}
+        onChange={handleChange}
+      />
+
+      <Button variant="contained" type="submit">
+        Update user
+      </Button>
+      <CancelButton onClick={() => userStore.fetchAllUsers()} />
     </form>
   );
 };

@@ -2,9 +2,10 @@ import { useState } from 'react';
 import './assignusertocompany.css';
 import { observer } from 'mobx-react-lite';
 import { useRouteParams } from '../../../utils/useRouteParams';
-import CancelButton from '../../shared/cancel-button/CancelButton';
+import CancelButton from '../../shared/buttons/cancel-button/CancelButton';
 import { CompanyUserFormData } from '../../../stores/companyStore/types';
 import rootStore from '../../../stores/rootStore/RootStore';
+import { Button, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
 
 const AssignUserToCompanyForm: React.FC = observer(() => {
   const { companyId } = useRouteParams();
@@ -17,7 +18,7 @@ const AssignUserToCompanyForm: React.FC = observer(() => {
     setUser(e.target.value);
   };
 
-  const handlePositionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handlePositionChange = (e: SelectChangeEvent<string>) => {
     setPosition(e.target.value);
   };
 
@@ -45,35 +46,36 @@ const AssignUserToCompanyForm: React.FC = observer(() => {
   };
 
   const positionList = positionStore.positionList.map((position) => (
-    <option key={position._id} value={position._id}>
+    <MenuItem key={position._id} value={position._id}>
       {position.name}
-    </option>
+    </MenuItem>
   ));
 
   return (
     <form className="modal-form " onSubmit={handleFormSubmit}>
       <h2>Assign User</h2>
-      <div className="modal-form-inputs">
-        <label htmlFor="userCompanyInput">User:</label>
-        <input
-          type="text"
-          id="userCompanyInput"
-          value={user}
-          onChange={handleUserChange}
-          placeholder="Enter username"
-        />
-      </div>
-
-      <div className="modal-form-inputs">
-        <label>Position:</label>
-        <select value={position} onChange={handlePositionChange}>
-          <option>Select position</option>
-          {positionList}
-        </select>
-        {/* <input type="text" value={position} onChange={handleRoleChange} placeholder="Enter role" /> */}
-      </div>
-      <button type="submit">Assign</button>
-      <CancelButton />
+      <TextField
+        variant="outlined"
+        required
+        className="text-field"
+        label="User"
+        name="user"
+        type="text"
+        id="userCompanyInput"
+        value={user}
+        onChange={handleUserChange}
+        placeholder="Enter username"
+      />
+      <Select label="Position" value={position} onChange={handlePositionChange}>
+        <MenuItem disabled value="">
+          Select position
+        </MenuItem>
+        {positionList}
+      </Select>
+      <Button variant="contained" type="submit">
+        Assign
+      </Button>
+      <CancelButton onClick={() => companyStore.fetchAllUsersOfCompany(companyId)} />
     </form>
   );
 });

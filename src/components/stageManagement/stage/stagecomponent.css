@@ -1,0 +1,8 @@
+.stage-component {
+    padding: 1rem;
+    min-width: 300px;
+    transition: background-color 150ms ease;
+    color: black;
+    flex: 1;
+    background-color: var(--main-back-color);
+}

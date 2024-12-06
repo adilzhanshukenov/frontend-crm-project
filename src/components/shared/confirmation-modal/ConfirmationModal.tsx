@@ -1,3 +1,4 @@
+import { Button } from '@mui/material';
 import './confirmationmodel.css';
 
 export interface ConfirmationModalProps {
@@ -11,12 +12,12 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ message, onConfir
     <div className="modal-overlay">
       <div className="modal-content">
         <p>{message}</p>
-        <button onClick={onConfirm} className="confirm-button">
+        <Button variant="contained" onClick={onConfirm}>
           Yes
-        </button>
-        <button onClick={onCancel} className="cancel-button">
+        </Button>
+        <Button variant="outlined" onClick={onCancel}>
           No
-        </button>
+        </Button>
       </div>
     </div>
   );

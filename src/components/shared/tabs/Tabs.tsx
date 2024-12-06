@@ -4,16 +4,13 @@ import rootStore from '../../../stores/rootStore/RootStore';
 import Overview from '../../projectManagement/overview/Overview';
 import TaskList from '../../taskManagement/task-list/TaskList';
 import './tabs.css';
+import { Tab } from '@mui/material';
 
-const Tab = ({ label, isActive, onClick }: TabProps) => {
-  return (
-    <button className={`tab-button ${isActive ? 'active' : ''}`} onClick={onClick}>
-      {label}
-    </button>
-  );
+const TabComponent = ({ label, isActive, onClick }: TabProps) => {
+  return <Tab label={label} className={`tab-button ${isActive ? 'active' : ''}`} onClick={onClick} />;
 };
 
-const Tabs: React.FC = observer(() => {
+const TabsComponent: React.FC = observer(() => {
   const { tabStore } = rootStore;
   const tabData = [
     { label: 'Overview', component: <Overview /> },
@@ -21,20 +18,18 @@ const Tabs: React.FC = observer(() => {
   ];
   return (
     <div>
-      <div className="tab-buttons">
-        {tabData.map((tab, index) => (
-          <Tab
-            key={index}
-            label={tab.label}
-            isActive={index === tabStore.activeTab}
-            onClick={() => tabStore.setActiveTab(index)}
-          />
-        ))}
-      </div>
+      {tabData.map((tab, index) => (
+        <TabComponent
+          key={index}
+          label={tab.label}
+          isActive={index === tabStore.activeTab}
+          onClick={() => tabStore.setActiveTab(index)}
+        />
+      ))}
 
       <div className="tab-content">{tabData[tabStore.activeTab].component}</div>
     </div>
   );
 });
 
-export default Tabs;
+export default TabsComponent;

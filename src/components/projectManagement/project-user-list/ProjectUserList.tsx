@@ -1,19 +1,14 @@
-import { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useRouteParams } from '../../../utils/useRouteParams';
 import { User } from '../../../stores/userStore/types';
 import UserCard from '../../userManagement/user-card/UserCard';
-import Button from '../../shared/button/Button';
+import Button from '../../shared/buttons/button/Button';
 import ConfirmationModal from '../../shared/confirmation-modal/ConfirmationModal';
 import rootStore from '../../../stores/rootStore/RootStore';
 
 const ProjectUserList: React.FC = observer(() => {
   const { projectId } = useRouteParams();
   const { modalStore, projectStore } = rootStore;
-
-  useEffect(() => {
-    projectStore.fetchUsersOfProject(projectId);
-  }, [projectId, projectStore]);
 
   const openDeleteConfirmation = (user: User | null) => {
     projectStore.setUserToDelete(user);
@@ -33,7 +28,6 @@ const ProjectUserList: React.FC = observer(() => {
     projectStore.setUserToDelete(null);
   };
 
-  if (projectStore.loading) return <p>Loading...</p>;
   if (projectStore.error) return <p>Error: {projectStore.error}</p>;
 
   return (
@@ -48,7 +42,6 @@ const ProjectUserList: React.FC = observer(() => {
       <ul className="list-style">
         {projectStore.projectUser?.map((projectUser) => (
           <li key={projectUser._id}>
-            <p>{projectUser.role}</p>
             <UserCard
               user={projectUser.user}
               onEdit={handleEdit}

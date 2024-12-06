@@ -1,7 +1,6 @@
-import { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useRouteParams } from '../../../utils/useRouteParams';
-import Button from '../../shared/button/Button';
+import Button from '../../shared/buttons/button/Button';
 import PositionCard from '../position-card/PositionCard';
 import { Position } from '../../../stores/positionStore/types';
 import ConfirmationModal from '../../shared/confirmation-modal/ConfirmationModal';
@@ -10,10 +9,6 @@ import rootStore from '../../../stores/rootStore/RootStore';
 const PositionList: React.FC = observer(() => {
   const { companyId } = useRouteParams();
   const { modalStore, positionStore } = rootStore;
-
-  useEffect(() => {
-    positionStore.fetchAllPositions(companyId);
-  }, [companyId, positionStore]);
 
   const openDeleteConfirmation = async (position: Position | null) => {
     positionStore.setPositionToDelete(position);
@@ -46,7 +41,6 @@ const PositionList: React.FC = observer(() => {
     modalStore.openAnyModal({ mode: 'edit', activeModal: 'createEditPosition' });
   };
 
-  if (positionStore.loading) return <p>Loading...</p>;
   if (positionStore.error) return <p>Error: {positionStore.error}</p>;
 
   return (

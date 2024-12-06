@@ -1,0 +1,37 @@
+.project-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: start;
+    width: 100%;
+}
+
+.project-list-items {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    gap: 5px;
+}
+
+.project-item {
+    text-decoration: none;
+    color: black;
+    transition: color 0.3s ease;
+    cursor: pointer;
+}
+
+.project-item:hover {
+    color: #007bff;
+}
+
+.project-item.active {
+    font-weight: bold;
+    color: #4398f2;
+    border-bottom: 2px solid #007bff;
+}
+
+.project-item:focus {
+    font-weight: bold;
+    color: #4398f2;
+    border-bottom: 2px solid #007bff;
+}

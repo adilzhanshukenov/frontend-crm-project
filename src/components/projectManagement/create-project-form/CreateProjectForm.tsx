@@ -1,9 +1,10 @@
-import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import './createprojectform.css';
 import { observer } from 'mobx-react-lite';
-import CancelButton from '../../shared/cancel-button/CancelButton';
+import CancelButton from '../../shared/buttons/cancel-button/CancelButton';
 import rootStore from '../../../stores/rootStore/RootStore';
+import { Button, TextField } from '@mui/material';
 
 interface CreateProjectFormProps {
   name: string;
@@ -45,7 +46,7 @@ const CreateProjectForm: React.FC = observer(() => {
     modalStore.closeModal();
   };
 
-  const handleChange = async (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = async (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
@@ -53,24 +54,49 @@ const CreateProjectForm: React.FC = observer(() => {
   return (
     <form className="modal-form" onSubmit={handleFormSubmit}>
       <h2>Create project</h2>
-      <div className="modal-form-inputs">
-        <label>Name:</label>
-        <input name="name" value={formData.name} type="text" onChange={handleChange} />
-      </div>
-      <div className="modal-form-inputs">
-        <label>Description:</label>
-        <input name="description" value={formData.description} type="text" onChange={handleChange} />
-      </div>
-      <div className="modal-form-inputs">
-        <label>Start date:</label>
-        <input name="start_date" value={formData.start_date} type="date" onChange={handleChange} />
-      </div>
-      <div className="modal-form-inputs">
-        <label>End date:</label>
-        <input name="end_date" value={formData.end_date} type="date" onChange={handleChange} />
-      </div>
-      <button type="submit">Create</button>
-      <CancelButton />
+      <TextField
+        value={formData.name}
+        onChange={handleChange}
+        name="name"
+        label="Name"
+        placeholder="Type name of project"
+        required={true}
+        type="text"
+      />
+
+      <TextField
+        value={formData.description}
+        onChange={handleChange}
+        name="description"
+        label="Description"
+        placeholder="Type name of project"
+        required={false}
+        type="text"
+      />
+      <TextField
+        value={formData.start_date}
+        onChange={handleChange}
+        name="start_date"
+        label="Start date"
+        placeholder="Choose start date"
+        required={true}
+        type="date"
+        variant="standard"
+      />
+      <TextField
+        value={formData.end_date}
+        onChange={handleChange}
+        name="end_date"
+        label="End date"
+        placeholder="Choose end date"
+        required={false}
+        type="date"
+        variant="standard"
+      />
+      <Button variant="contained" type="submit">
+        Create
+      </Button>
+      <CancelButton onClick={() => projectStore.fetchProjectsOfCompany(companyId)} />
     </form>
   );
 });

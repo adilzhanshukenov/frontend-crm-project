@@ -7,14 +7,15 @@ import HeaderTitle from '../../../components/shared/header-title/HeaderTitle';
 import CompanyCard from '../../../components/companyManagement/company-card/CompanyCard';
 import Modal from '../../../components/shared/modal/Modal';
 import { Company } from '../../../stores/companyStore/types';
-import Button from '../../../components/shared/button/Button';
+import Button from '../../../components/shared/buttons/button/Button';
 import ConfirmationModal from '../../../components/shared/confirmation-modal/ConfirmationModal';
 import { useAuth } from '../../../context/useAuth';
 import rootStore from '../../../stores/rootStore/RootStore';
+import LinearProgress from '@mui/material/LinearProgress';
 
 const CompanyList: React.FC = observer(() => {
   const { isAuthenticated } = useAuth();
-  const { companyStore, modalStore } = rootStore;
+  const { companyStore, projectStore, modalStore } = rootStore;
   const navigate = useNavigate();
 
   if (!isAuthenticated) {
@@ -59,42 +60,42 @@ const CompanyList: React.FC = observer(() => {
     modalStore.closeModal();
   };
 
-  if (companyStore.loading) return <p>Loading...</p>;
+  if (companyStore.loading)
+    return (
+      <div style={{ width: '100%' }}>
+        <LinearProgress />
+      </div>
+    );
   if (companyStore.error) return <p>Error: {companyStore.error}</p>;
 
-  const handleCompanyClick = (company: Company) => {
-    navigate(`/companies/${company._id}`);
+  const handleCompanyClick = async (company: Company) => {
+    await projectStore.fetchProjectsOfCompany(company._id);
+    if (projectStore.projects.length > 0) projectStore.setSelectedProject(projectStore.projects[0]._id);
+    navigate(`/companies/${company._id}/project/${projectStore.selectedProject?._id}`);
+    modalStore.setDrawerOpen(false);
   };
 
   const handleCompanySettingsClick = (company: Company) => {
     navigate(`/companies/${company._id}/settings`);
   };
 
-  const handleClose = () => {
-    companyStore.fetchAllCompanies();
-    modalStore.closeModal();
-    // Refetch users after user creation
-  };
-
   const companyList = (
-    <div>
-      <ul className="list-style">
-        {companyStore.companyList?.map((company) => (
-          <li key={company._id} onClick={() => handleCompanyClick(company)}>
-            <CompanyCard
-              onSettings={() => {
-                handleCompanySettingsClick(company);
-              }}
-              onEdit={() => {
-                companyStore.currectCompany = company;
-                handleOpenModalForEdit();
-              }}
-              onDelete={() => openDeleteConfirmation(company)}
-              company={company}
-            />
-          </li>
-        ))}
-      </ul>
+    <div className="company-card-list">
+      {companyStore.companyList?.map((company) => (
+        <CompanyCard
+          key={company._id}
+          onClick={() => handleCompanyClick(company)}
+          onSettings={() => {
+            handleCompanySettingsClick(company);
+          }}
+          onEdit={() => {
+            companyStore.currectCompany = company;
+            handleOpenModalForEdit();
+          }}
+          onDelete={() => openDeleteConfirmation(company)}
+          company={company}
+        />
+      ))}
     </div>
   );
 
@@ -109,11 +110,7 @@ const CompanyList: React.FC = observer(() => {
 
       <Modal>
         {modalStore.activeModal === 'createEditCompany' && (
-          <CreateCompanyForm
-            company={companyStore.currectCompany}
-            onSubmit={handleFormSubmit}
-            handleClose={handleClose}
-          />
+          <CreateCompanyForm company={companyStore.currectCompany} onSubmit={handleFormSubmit} />
         )}
       </Modal>
       {companyStore.companyToDelete !== null && (

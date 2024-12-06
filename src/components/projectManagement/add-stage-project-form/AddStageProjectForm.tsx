@@ -1,9 +1,10 @@
 import { observer } from 'mobx-react-lite';
 import { useRouteParams } from '../../../utils/useRouteParams';
 import { useEffect, useState } from 'react';
-import CancelButton from '../../shared/cancel-button/CancelButton';
+import CancelButton from '../../shared/buttons/cancel-button/CancelButton';
 import { ProjectStageFormData } from '../../../stores/stageStore/types';
 import rootStore from '../../../stores/rootStore/RootStore';
+import { Button, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
 
 const AddStageProjectForm: React.FC = observer(() => {
   const { projectId, companyId } = useRouteParams();
@@ -14,7 +15,9 @@ const AddStageProjectForm: React.FC = observer(() => {
     stageStore.fetchAllStages(companyId);
   }, [companyId, stageStore]);
 
-  const handleChange = async (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = async (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent<string>,
+  ) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
@@ -28,24 +31,44 @@ const AddStageProjectForm: React.FC = observer(() => {
   };
 
   const companyStages = stageStore.stageList.map((stage) => (
-    <option key={stage._id} value={stage._id}>
+    <MenuItem key={stage._id} value={stage._id}>
       {stage.name}
-    </option>
+    </MenuItem>
   ));
 
   return (
     <form className="modal-form" onSubmit={handleFormSubmit}>
+      <h2>Add stage</h2>
       <div className="modal-form-inputs">
-        <label>Stage:</label>
-        <select name="stage" value={formData.stage} onChange={handleChange}>
-          <option value="">Select stage</option>
+        <Select
+          label="Stage"
+          value={formData.stage}
+          name="stage"
+          onChange={handleChange}
+          sx={{
+            '& .MuiInputLabel-root': {
+              color: 'black', // Optional, in case nested styling is needed
+            },
+          }}
+        >
+          <MenuItem disabled value="">
+            Select stage
+          </MenuItem>
           {companyStages}
-        </select>
-        <label>Order:</label>
-        <input name="order" type="number" value={formData.order} onChange={handleChange} />
+        </Select>
+        <TextField
+          label="Order"
+          placeholder="Type order of stage"
+          name="order"
+          type="number"
+          value={formData.order}
+          onChange={handleChange}
+        />
       </div>
-      <button type="submit">Add stage</button>
-      <CancelButton />
+      <Button type="submit" variant="contained">
+        Add stage
+      </Button>
+      <CancelButton onClick={() => stageStore.fetchStagesOfProject(projectId)} />
     </form>
   );
 });

@@ -35,7 +35,7 @@ export class ProjectStore {
   };
 
   @action
-  loadSelectedProject = () => {
+  loadSelectedProject = async () => {
     const selectedProjectId = localStorage.getItem('selectedProject');
     if (selectedProjectId) {
       this.selectedProject = this.projects.find((project) => project._id === selectedProjectId) || null;
@@ -117,7 +117,7 @@ export class ProjectStore {
     this.success = false;
 
     try {
-      await axiosInstance.post(`/user-project`, projectUser);
+      await axiosInstance.post(`/project-user`, projectUser);
       this.success = true;
     } catch (error) {
       this.error = error.message;
@@ -137,7 +137,7 @@ export class ProjectStore {
     this.success = false;
 
     try {
-      const response = await axiosInstance.get(`/user-project/${projectId}`);
+      const response = await axiosInstance.get(`/project-user/${projectId}`);
       this.projectUser = response.data;
       this.success = true;
     } catch (error) {
@@ -158,7 +158,7 @@ export class ProjectStore {
     this.success = false;
 
     try {
-      await axiosInstance.delete(`/user-project/${userId}`);
+      await axiosInstance.delete(`/project-user/${userId}`);
       this.success = true;
     } catch (error) {
       this.error = error.message;

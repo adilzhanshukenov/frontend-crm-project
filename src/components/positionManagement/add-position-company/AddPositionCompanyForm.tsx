@@ -3,8 +3,9 @@ import { observer } from 'mobx-react-lite';
 import './addpositioncompany.css';
 import { Position, PositionFormData } from '../../../stores/positionStore/types';
 import { useRouteParams } from '../../../utils/useRouteParams';
-import CancelButton from '../../shared/cancel-button/CancelButton';
+import CancelButton from '../../shared/buttons/cancel-button/CancelButton';
 import rootStore from '../../../stores/rootStore/RootStore';
+import { Button, TextField } from '@mui/material';
 
 interface PositionFormProps {
   position?: Position | null;
@@ -47,16 +48,31 @@ const AddPositionCompanyForm: React.FC<PositionFormProps> = observer(({ position
   return (
     <form className="modal-form" onSubmit={handleFormSubmit}>
       <h2>{position ? 'Update position' : 'Add position'}</h2>
-      <div className="modal-form-inputs">
-        <label>Position:</label>
-        <input type="text" name="name" value={formData.name} onChange={handleChange} />
-      </div>
-      <div className="modal-form-inputs">
-        <label>Description</label>
-        <textarea name="description" value={formData.description} onChange={handleChange} />
-      </div>
-      <button type="submit">{position ? 'Update position' : 'Add position'}</button>
-      <CancelButton />
+      <TextField
+        className="text-field"
+        required
+        variant="outlined"
+        label="Position"
+        type="text"
+        name="name"
+        value={formData.name}
+        onChange={handleChange}
+        placeholder="Type position"
+      />
+      <TextField
+        className="text-field"
+        required
+        variant="outlined"
+        label="Description"
+        name="description"
+        value={formData.description}
+        onChange={handleChange}
+        placeholder="Type description"
+      />
+      <Button variant="contained" type="submit">
+        {position ? 'Update position' : 'Add position'}
+      </Button>
+      <CancelButton onClick={() => positionStore.fetchAllPositions(companyId)} />
     </form>
   );
 });

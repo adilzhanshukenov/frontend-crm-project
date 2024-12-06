@@ -1,11 +1,10 @@
 .project-header {
     height: 80px;
     width: 100%;
-    border-bottom: 1px solid white;
+    border-bottom: 1px solid var(--border-color);
     padding: 20px;
     display: flex;
     flex-direction: row;
-
     justify-content: space-between;
     align-items: center;
 }

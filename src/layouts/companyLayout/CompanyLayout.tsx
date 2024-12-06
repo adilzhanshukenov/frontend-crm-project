@@ -8,15 +8,34 @@ import AddUserToProjectForm from '../../components/projectManagement/add-user-pr
 import AddStageProjectForm from '../../components/projectManagement/add-stage-project-form/AddStageProjectForm';
 import AddTaskForm from '../../components/taskManagement/add-task-form/AddTaskForm';
 import rootStore from '../../stores/rootStore/RootStore';
+import IconSidebar from '../../components/shared/icon-sidebar/IconSidebar';
 
 const CompanyLayout: React.FC = observer(() => {
-  const { modalStore } = rootStore;
+  const { modalStore, projectStore } = rootStore;
+
   return (
     <div className="company-layout">
+      <IconSidebar />
       <CompanySidebar />
-      <main className="company-content">
-        <Outlet />
-      </main>
+      {projectStore.selectedProject ? (
+        <main className="company-content">
+          <Outlet />
+        </main>
+      ) : (
+        <div
+          style={{
+            width: '100%',
+            height: '100vh',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <h1>No projects found</h1>
+        </div>
+      )}
+
       <Modal>
         {modalStore.activeModal === 'createProjectModal' && <CreateProjectForm />}
         {modalStore.activeModal === 'addUserToProject' && <AddUserToProjectForm />}

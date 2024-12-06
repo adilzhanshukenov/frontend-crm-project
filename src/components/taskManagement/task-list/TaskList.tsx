@@ -1,11 +1,12 @@
 import rootStore from '../../../stores/rootStore/RootStore';
-import Button from '../../shared/button/Button';
+import Button from '../../shared/buttons/button/Button';
 import TaskBoard from '../task-board/TaskBoard';
+import './tasklist.css';
 
 const TaskList = () => {
   const { modalStore } = rootStore;
   return (
-    <div>
+    <div className="task-list">
       <div className="title-area">
         <h2>Tasks</h2>
         <Button

@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useRouteParams } from '../../../utils/useRouteParams';
 import './addstagecompany.css';
-import CancelButton from '../../shared/cancel-button/CancelButton';
+import CancelButton from '../../shared/buttons/cancel-button/CancelButton';
 import { Stage, StageFormData } from '../../../stores/stageStore/types';
 import rootStore from '../../../stores/rootStore/RootStore';
+import { Button, TextField } from '@mui/material';
 
 interface StageFormProps {
   stage?: Stage | null;
@@ -56,18 +57,30 @@ const AddStageCompanyForm: React.FC<StageFormProps> = ({ stage }) => {
   return (
     <form className="modal-form" onSubmit={handleFormSubmit}>
       <h2>{modalStore.mode === 'edit' ? 'Edit stage' : 'Add stage'}</h2>
-      <div className="modal-form-inputs">
-        <label>Name: </label>
-        <input type="text" name="name" value={formData.name} onChange={handleChange} />
-      </div>
+      <TextField
+        className="text-field"
+        variant="outlined"
+        label="Name"
+        type="text"
+        name="name"
+        value={formData.name}
+        onChange={handleChange}
+      />
 
-      <div className="modal-form-inputs">
-        <label>Description: </label>
-        <textarea value={formData.description} name="description" onChange={handleChange} />
-      </div>
+      <TextField
+        className="text-field"
+        variant="outlined"
+        label="Description"
+        type="text"
+        value={formData.description}
+        name="description"
+        onChange={handleChange}
+      />
 
-      <button type="submit">{modalStore.mode === 'edit' ? 'Edit stage' : 'Add stage'}</button>
-      <CancelButton />
+      <Button variant="contained" type="submit">
+        {modalStore.mode === 'edit' ? 'Edit stage' : 'Add stage'}
+      </Button>
+      <CancelButton onClick={() => stageStore.fetchAllStages(companyId)} />
     </form>
   );
 };
