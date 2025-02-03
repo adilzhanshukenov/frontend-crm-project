@@ -10,10 +10,11 @@ const StageProjectList: React.FC = observer(() => {
   const { projectId } = useRouteParams();
   const { stageStore, modalStore } = rootStore;
 
-  const handleEdit = () => {};
+  const openEditModal = () => {
+    modalStore.openAnyModal({ mode: 'edit', activeModal: 'addStageToProject' });
+  };
 
   const openDeleteConfirmation = (stage: Stage | null) => {
-    console.log(stage?._id);
     stageStore.setStageToDelete(stage);
   };
 
@@ -38,17 +39,22 @@ const StageProjectList: React.FC = observer(() => {
           onClick={() => modalStore.openAnyModal({ mode: 'create', activeModal: 'addStageToProject' })}
         />
       </div>
-      <ul className="list-style">
-        {stageStore.projectStage.map((projectStage) => (
-          <li key={projectStage._id}>
-            <StageCard
-              stage={projectStage.stage}
-              onEdit={handleEdit}
-              onDelete={() => openDeleteConfirmation(projectStage.stage)}
-            />
-          </li>
-        ))}
-      </ul>
+      {stageStore.projectStage.length != 0 ? (
+        <ul className="list-style">
+          {stageStore.projectStage.map((projectStage) => (
+            <li key={projectStage._id}>
+              <StageCard
+                stage={projectStage.stage}
+                projectStage={projectStage}
+                onEdit={openEditModal}
+                onDelete={() => openDeleteConfirmation(projectStage.stage)}
+              />
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <h2 style={{ textAlign: 'center' }}>No stages found</h2>
+      )}
 
       {stageStore.stageToDelete !== null && (
         <ConfirmationModal

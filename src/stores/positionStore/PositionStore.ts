@@ -36,7 +36,8 @@ export class PositionStore {
       await axiosInstance.post(`/position`, position);
       this.success = true;
     } catch (error) {
-      this.error = error.message;
+      this.error = error.response?.data?.message;
+      console.log(error.response?.data?.message)
     } finally {
       this.loading = false;
     }

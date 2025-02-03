@@ -9,9 +9,18 @@ import AddStageProjectForm from '../../components/projectManagement/add-stage-pr
 import AddTaskForm from '../../components/taskManagement/add-task-form/AddTaskForm';
 import rootStore from '../../stores/rootStore/RootStore';
 import IconSidebar from '../../components/shared/icon-sidebar/IconSidebar';
+import AssignUserToTask from '../../components/taskManagement/assign-user-to-task/AssignUserToTask';
+import { useEffect } from 'react';
+import { useRouteParams } from '../../utils/useRouteParams';
 
 const CompanyLayout: React.FC = observer(() => {
-  const { modalStore, projectStore } = rootStore;
+  const { modalStore, projectStore, taskStore } = rootStore;
+  const { projectId } = useRouteParams();
+
+  useEffect(() => {
+    projectStore.fetchUsersOfProject(projectId);
+    taskStore.fetchAllTasks(projectId);
+  }, [projectId, projectStore, taskStore]);
 
   return (
     <div className="company-layout">
@@ -41,6 +50,9 @@ const CompanyLayout: React.FC = observer(() => {
         {modalStore.activeModal === 'addUserToProject' && <AddUserToProjectForm />}
         {modalStore.activeModal === 'addStageToProject' && <AddStageProjectForm />}
         {modalStore.activeModal === 'addTaskModal' && <AddTaskForm />}
+        {modalStore.activeModal === 'assignUserToTask' && (
+          <AssignUserToTask taskId={taskStore.selectedTask} availableUsers={projectStore.projectUser} />
+        )}
       </Modal>
     </div>
   );

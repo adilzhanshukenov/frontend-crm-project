@@ -5,11 +5,12 @@
 .registration-form {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 10px;
     width: 200px;
     margin: 0 auto;
 }
 
 .registration-title {
     font-size: 32px;
+    margin-bottom: 10px;
 }

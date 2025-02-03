@@ -39,15 +39,19 @@ const CompanyUserList: React.FC = observer(() => {
           onClick={() => modalStore.openAnyModal({ mode: 'create', activeModal: 'addUserToCompany' })}
         />
       </div>
-      <div>
-        <ul className="list-style">
-          {companyStore.companyUser?.map((user) => (
-            <li key={user.user._id}>
-              <UserCard user={user.user} onEdit={handleEdit} onDelete={() => openDeleteConfirmation(user.user)} />
-            </li>
-          ))}
-        </ul>
-      </div>
+      {companyStore.companyUser.length != 0 ? (
+        <div>
+          <ul className="list-style">
+            {companyStore.companyUser?.map((user) => (
+              <li key={user.user._id}>
+                <UserCard user={user.user} onEdit={handleEdit} onDelete={() => openDeleteConfirmation(user.user)} />
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : (
+        <h2 style={{ textAlign: 'center' }}>No users found</h2>
+      )}
       {companyStore.userToDelete !== null && (
         <ConfirmationModal
           message="Are you sure you want to delete this user?"

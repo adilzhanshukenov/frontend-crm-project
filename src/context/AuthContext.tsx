@@ -28,6 +28,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const loggedInUser = response.data;
     localStorage.setItem('user', JSON.stringify(loggedInUser)); // Persist user to localStorage
     localStorage.setItem('token', response.data.access_token);
+    axiosInstance.defaults.headers['Authorization'] = `Bearer ${response.data.access_token}`;
     setUser(loggedInUser);
   };
 

@@ -42,38 +42,42 @@ const AddPositionCompanyForm: React.FC<PositionFormProps> = observer(({ position
     } else {
       await positionStore.addPositionToCompany(positionData);
     }
-    positionStore.fetchAllPositions(companyId);
-    modalStore.closeModal();
+    //positionStore.fetchAllPositions(companyId);
   };
   return (
-    <form className="modal-form" onSubmit={handleFormSubmit}>
-      <h2>{position ? 'Update position' : 'Add position'}</h2>
-      <TextField
-        className="text-field"
-        required
-        variant="outlined"
-        label="Position"
-        type="text"
-        name="name"
-        value={formData.name}
-        onChange={handleChange}
-        placeholder="Type position"
-      />
-      <TextField
-        className="text-field"
-        required
-        variant="outlined"
-        label="Description"
-        name="description"
-        value={formData.description}
-        onChange={handleChange}
-        placeholder="Type description"
-      />
-      <Button variant="contained" type="submit">
-        {position ? 'Update position' : 'Add position'}
-      </Button>
-      <CancelButton onClick={() => positionStore.fetchAllPositions(companyId)} />
-    </form>
+    <div>
+      <form className="modal-form" onSubmit={handleFormSubmit}>
+        <h2>{position ? 'Update position' : 'Add position'}</h2>
+        <TextField
+          className="text-field"
+          required
+          variant="outlined"
+          label="Position"
+          type="text"
+          name="name"
+          value={formData.name}
+          onChange={handleChange}
+          placeholder="Type position"
+        />
+        <TextField
+          className="text-field"
+          required
+          variant="outlined"
+          label="Description"
+          name="description"
+          value={formData.description}
+          onChange={handleChange}
+          placeholder="Type description"
+        />
+        <div className="modal-buttons">
+          <Button variant="contained" type="submit">
+            {position ? 'Update position' : 'Add position'}
+          </Button>
+          <CancelButton onClick={() => positionStore.fetchAllPositions(companyId)} />
+        </div>
+      </form>
+      {positionStore.error && <p>{positionStore.error}</p>}
+    </div>
   );
 });
 

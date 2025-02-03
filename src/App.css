@@ -33,7 +33,7 @@ Modal form styles
   display: flex;
   flex-direction: column;
   flex: 2;
-  gap: 5px;
+  gap: 10px;
   justify-content: start;
 }
 
@@ -44,9 +44,16 @@ Modal form styles
   padding-bottom: 5px;
 }
 
+.modal-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
 
 .text-field {
-  border-radius: 5px;
+  border-radius: 2px;
+  min-width: 250px;
 }
 
 /**

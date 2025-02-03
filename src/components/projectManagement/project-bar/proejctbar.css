@@ -1,12 +1,17 @@
 .project-bar {
     width: 100%;
+    position: sticky;
+    top: 80px;
+    right: 0;
     height: 50px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
     padding: 10px;
-    border-bottom: 1px solid var(--border-color)
+    border-bottom: 1px solid var(--border-color);
+    background-color: var(--main-back-color);
+    z-index: 50;
 }
 
 .right-side {

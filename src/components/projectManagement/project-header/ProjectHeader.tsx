@@ -1,9 +1,9 @@
 import { Box, TextField } from '@mui/material';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import './projectheader.css';
 import SettingsIcon from '@mui/icons-material/Settings';
 import SearchIcon from '@mui/icons-material/Search';
 import { observer } from 'mobx-react-lite';
+import AccountCircleIconButton from '../../shared/buttons/account-icon-button/AccountCircleIconButton';
 
 const ProjectHeader = observer(() => {
   return (
@@ -25,16 +25,7 @@ const ProjectHeader = observer(() => {
             },
           }}
         />
-        <AccountCircleIcon
-          fontSize="large"
-          style={{ cursor: 'pointer' }}
-          sx={{
-            transition: 'transform 0.5s ease', // Smooth transition
-            '&:hover': {
-              transform: 'scale(1.2)', // Scale on hover
-            },
-          }}
-        />
+        <AccountCircleIconButton />
       </div>
     </div>
   );

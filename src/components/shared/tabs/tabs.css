@@ -20,5 +20,5 @@
 .tab-content {
     background-color: var(--main-back-color);
     padding: 20px;
-    height: 100vh;
+    min-height: 100vh;
 }

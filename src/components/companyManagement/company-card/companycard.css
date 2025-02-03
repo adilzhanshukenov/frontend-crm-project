@@ -2,7 +2,6 @@
     flex: 1 1 calc(50% - 5px);
     min-width: 400px;
     cursor: pointer;
-    background-color: rgb(242, 242, 242);
 }
 
 .company-card-content {

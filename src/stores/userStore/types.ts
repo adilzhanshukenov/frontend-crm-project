@@ -2,7 +2,8 @@ export interface User {
   _id?: string;
   username: string;
   email: string;
-  roles: string[];
+  name: string;
+  surname: string;
 }
 
 export interface UserResponse {
@@ -12,5 +13,6 @@ export interface UserResponse {
 export interface UserData {
   username: string;
   email: string;
-  roles: string[];
+  name: string;
+  surname: string;
 }

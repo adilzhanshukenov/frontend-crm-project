@@ -50,7 +50,6 @@ export const CreateCompanyForm: React.FC<CompanyFormProps> = ({ company, onSubmi
         variant="outlined"
         name="name"
       />
-
       <TextField
         className="text-field"
         required
@@ -62,7 +61,6 @@ export const CreateCompanyForm: React.FC<CompanyFormProps> = ({ company, onSubmi
         variant="outlined"
         name="address"
       />
-
       <TextField
         className="text-field"
         required
@@ -74,10 +72,12 @@ export const CreateCompanyForm: React.FC<CompanyFormProps> = ({ company, onSubmi
         variant="outlined"
         name="industry"
       />
-      <Button variant="contained" type="submit" disabled={userStore.loading}>
-        {company ? 'Update' : 'Create'}
-      </Button>
-      <CancelButton onClick={() => companyStore.fetchAllCompanies()} />
+      <div className="modal-buttons">
+        <Button variant="contained" type="submit" disabled={userStore.loading}>
+          {company ? 'Update' : 'Create'}
+        </Button>
+        <CancelButton onClick={() => companyStore.fetchAllCompanies()} />
+      </div>
     </form>
   );
 };

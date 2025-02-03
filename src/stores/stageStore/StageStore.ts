@@ -9,6 +9,7 @@ export class StageStore {
   @observable projectStage: ProjectStage[] = [];
   @observable stageToDelete: Stage | null = null;
   @observable currentStage: Stage | null = null;
+  @observable currentStageProject: ProjectStage | null = null;
   @observable loading: boolean = false;
   @observable error: string | null = null;
   @observable success: boolean = false;
@@ -27,6 +28,11 @@ export class StageStore {
     this.stageToDelete = stage;
   };
 
+  @action
+  setCurrentStageProject = async (stageProject: ProjectStage | null) => {
+    this.currentStageProject = stageProject;
+  }
+
   /**
    *
    * @param stage
@@ -38,7 +44,7 @@ export class StageStore {
     this.success = false;
 
     try {
-      await axiosInstance.post(`/stage`, stage);
+      await axiosInstance.post(`stage`, stage);
       this.success = true;
     } catch (error) {
       this.error = error.message;
@@ -58,7 +64,7 @@ export class StageStore {
     this.success = false;
 
     try {
-      const response = await axiosInstance.get(`/stage/${companyId}`);
+      const response = await axiosInstance.get(`stage/${companyId}`);
       this.stageList = response.data;
       this.success = true;
     } catch (error) {
@@ -79,7 +85,7 @@ export class StageStore {
     this.success = false;
 
     try {
-      await axiosInstance.put(`/stage/${updatedStage._id}`, updatedStage);
+      await axiosInstance.put(`stage/${updatedStage._id}`, updatedStage);
       this.success = true;
     } catch (error) {
       this.error = error.message;
@@ -132,7 +138,9 @@ export class StageStore {
       await axiosInstance.post(`project-stage`, projectStage);
       this.success = true;
     } catch (error) {
-      this.error = error.message;
+      if(error.response?.status === 403) {
+        alert(error.response.data.message)
+      }
     } finally {
       this.loading = false;
     }

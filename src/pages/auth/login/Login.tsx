@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { NavLink, useNavigate, useSearchParams } from 'react-router-dom';
+import { Button, TextField } from '@mui/material';
 import './login.css';
 import { useAuth } from '../../../context/useAuth';
-import { Button, TextField } from '@mui/material';
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState<string>('');
@@ -50,6 +50,9 @@ const Login: React.FC = () => {
         <Button type="submit" variant="contained">
           Login
         </Button>
+        <p>
+          Don't have an account? <NavLink to="/auth/register">Sign up</NavLink>
+        </p>
         {error && <p>{error}</p>}
       </form>
     </div>

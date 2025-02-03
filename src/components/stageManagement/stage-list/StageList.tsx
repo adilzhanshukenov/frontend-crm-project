@@ -43,22 +43,27 @@ const StageList: React.FC = observer(() => {
         <h2>Stages</h2>
         <Button title="Add stage" onClick={openModalForCreate} />
       </div>
-      <div>
-        <ul className="list-style">
-          {stageStore.stageList?.map((stage) => (
-            <li key={stage._id}>
-              <StageCard
-                stage={stage}
-                onEdit={() => {
-                  stageStore.currentStage = stage;
-                  openModalForEdit();
-                }}
-                onDelete={() => openDeleteConfirmation(stage)}
-              />
-            </li>
-          ))}
-        </ul>
-      </div>
+      {stageStore.stageList.length != 0 ? (
+        <div>
+          <ul className="list-style">
+            {stageStore.stageList?.map((stage) => (
+              <li key={stage._id}>
+                <StageCard
+                  stage={stage}
+                  onEdit={() => {
+                    stageStore.currentStage = stage;
+                    openModalForEdit();
+                  }}
+                  onDelete={() => openDeleteConfirmation(stage)}
+                />
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : (
+        <h2 style={{ textAlign: 'center' }}>No stages found</h2>
+      )}
+
       {stageStore.stageToDelete !== null && (
         <ConfirmationModal
           message="Are you sure you want to delete this stage?"

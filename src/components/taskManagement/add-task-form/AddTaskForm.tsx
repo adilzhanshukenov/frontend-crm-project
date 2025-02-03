@@ -5,6 +5,7 @@ import { TaskData } from '../../../stores/taskStore/types';
 import { useRouteParams } from '../../../utils/useRouteParams';
 import rootStore from '../../../stores/rootStore/RootStore';
 import { Button, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
+import SelectComponent from '../../shared/select/SelectComponent';
 
 interface TaskFormData {
   name: string;
@@ -27,9 +28,9 @@ const AddTaskForm: React.FC = observer(() => {
   const [formData, setFormData] = useState<TaskFormData>({
     name: '',
     description: '',
-    status: '',
+    status: 'Pending',
     due_date: '',
-    priority: '',
+    priority: 'Medium',
     project: projectId,
     stage: '',
   });
@@ -46,7 +47,6 @@ const AddTaskForm: React.FC = observer(() => {
       due_date: new Date(formData.due_date),
       stage: taskStore.firstStage,
     };
-    console.log(convertDateFormData);
     await taskStore.createTask(convertDateFormData);
     await taskStore.fetchAllTasks(projectId);
     modalStore.closeModal();
@@ -66,6 +66,7 @@ const AddTaskForm: React.FC = observer(() => {
 
   return (
     <form className="modal-form" onSubmit={handleFormSubmit}>
+      <h2>Add task</h2>
       <TextField
         type="text"
         variant="outlined"
@@ -83,14 +84,18 @@ const AddTaskForm: React.FC = observer(() => {
         onChange={handleChange}
       />
 
-      <Select variant="outlined" name="status" value={formData.status} onChange={handleChange}>
-        <MenuItem disabled value="">
-          Select status
-        </MenuItem>
-        {taskStatuses}
-      </Select>
+      <SelectComponent
+        label="Status"
+        name="status"
+        title="Status"
+        items={taskStatuses}
+        onChange={handleChange}
+        value={formData.status}
+        placeholder="Select status"
+      />
 
       <TextField
+        slotProps={{ inputLabel: { shrink: true } }}
         type="date"
         variant="outlined"
         label="Due date"
@@ -100,16 +105,18 @@ const AddTaskForm: React.FC = observer(() => {
         placeholder="Choose date"
       />
 
-      <Select variant="standard" name="priority" value={formData.priority} onChange={handleChange}>
+      <Select variant="outlined" name="priority" value={formData.priority} onChange={handleChange}>
         <MenuItem disabled value="">
           Select priority
         </MenuItem>
         {taskPriorities}
       </Select>
-      <Button type="submit" variant="contained">
-        Add task
-      </Button>
-      <CancelButton onClick={() => taskStore.fetchAllTasks(projectId)} />
+      <div className="modal-buttons">
+        <Button type="submit" variant="contained">
+          Add task
+        </Button>
+        <CancelButton onClick={() => taskStore.fetchAllTasks(projectId)} />
+      </div>
     </form>
   );
 });

@@ -49,22 +49,27 @@ const PositionList: React.FC = observer(() => {
         <h2>Positions</h2>
         <Button title="Add position" onClick={openModalForCreate} />
       </div>
-      <div>
-        <ul className="list-style">
-          {positionStore.positionList?.map((position) => (
-            <li key={position._id}>
-              <PositionCard
-                position={position}
-                onEdit={() => {
-                  positionStore.currentPosition = position;
-                  openModalForEdit();
-                }}
-                onDelete={() => openDeleteConfirmation(position)}
-              />
-            </li>
-          ))}
-        </ul>
-      </div>
+      {positionStore.positionList.length != 0 ? (
+        <div>
+          <ul className="list-style">
+            {positionStore.positionList?.map((position) => (
+              <li key={position._id}>
+                <PositionCard
+                  position={position}
+                  onEdit={() => {
+                    positionStore.currentPosition = position;
+                    openModalForEdit();
+                  }}
+                  onDelete={() => openDeleteConfirmation(position)}
+                />
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : (
+        <h2 style={{ textAlign: 'center' }}>No positions found</h2>
+      )}
+
       {positionStore.positionToDelete !== null && (
         <ConfirmationModal
           message="Are you sure you want to delete this position?"

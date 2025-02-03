@@ -39,19 +39,24 @@ const ProjectUserList: React.FC = observer(() => {
           onClick={() => modalStore.openAnyModal({ mode: 'create', activeModal: 'addUserToProject' })}
         />
       </div>
-      <ul className="list-style">
-        {projectStore.projectUser?.map((projectUser) => (
-          <li key={projectUser._id}>
-            <UserCard
-              user={projectUser.user}
-              onEdit={handleEdit}
-              onDelete={() => {
-                openDeleteConfirmation(projectUser.user);
-              }}
-            />
-          </li>
-        ))}
-      </ul>
+      {projectStore.projectUser.length != 0 ? (
+        <ul className="list-style">
+          {projectStore.projectUser?.map((projectUser) => (
+            <li key={projectUser._id}>
+              <UserCard
+                user={projectUser.user}
+                projectUser={projectUser}
+                onEdit={handleEdit}
+                onDelete={() => {
+                  openDeleteConfirmation(projectUser.user);
+                }}
+              />
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <h2 style={{ textAlign: 'center' }}>No users found</h2>
+      )}
 
       {projectStore.userToDelete !== null && (
         <ConfirmationModal

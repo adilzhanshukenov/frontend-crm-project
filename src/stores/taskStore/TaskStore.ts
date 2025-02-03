@@ -11,8 +11,10 @@ export class TaskStore {
   @observable taskPriorities: string[] = [];
   @observable taskStatuses: string[] = [];
   @observable taskStageUsers: TaskStageUser[] = [];
+  @observable selectedTask: Task | null = null;
   @observable user: User | null = null;
   @observable previousState: Task[] | null = null; // For rollback
+  @observable taskToDelete: Task | null = null;
   @observable firstStage: string = '';
   @observable loading: boolean = false;
   @observable error: string | null = null;
@@ -24,6 +26,16 @@ export class TaskStore {
   }
 
   @action
+  setTaskToDelete = (task: Task | null) => {
+    this.taskToDelete = task;
+  }
+
+  @action
+  selectTask = async (task: Task | null) => {
+    this.selectedTask = task;
+  };
+
+  @action
   createTask = async (task: TaskData) => {
     this.loading = true;
     this.error = null;
@@ -31,17 +43,36 @@ export class TaskStore {
 
     try {
       const response = await axiosInstance.post(`task`, task);
-      console.log('createTask: ', { data: response.data });
       if (response.data._id) {
         this.tasks.push(response.data);
       }
       this.success = true;
     } catch (error) {
-      this.error = error.message;
+      if(error.response?.status === 403) {
+        alert(error.response.data.message); // Show message to user
+      }
     } finally {
       this.loading = false;
     }
   };
+
+  @action
+  fetchAllTaskStageUsers = async () => {
+    this.loading = true;
+    this.error = null;
+    this.success = false;
+
+    try {
+      const response = await axiosInstance.get(`task-stage-user`);
+      this.taskStageUsers = response.data;
+    } catch (error) {
+      this.error = error;
+    }
+    finally {
+      this.loading = false;
+    }
+  }
+
 
   @action
   createTaskInStage = async (taskStageUser: TaskStageUserData) => {
@@ -50,8 +81,7 @@ export class TaskStore {
     this.success = false;
 
     try {
-      const response = await axiosInstance.post(`task-stage-user`, taskStageUser);
-      this.taskStageUsers = response.data;
+      await axiosInstance.post(`task-stage-user`, taskStageUser);
       this.success = true;
     } catch (error) {
       this.error = error.message;
@@ -61,18 +91,20 @@ export class TaskStore {
   };
 
   @action
-  assignUserToTask = async (taskId: UniqueIdentifier, userId: string) => {
+  assignUserToTask = async (task: Task | null, userId: string) => {
     this.loading = true;
     this.error = null;
     this.success = false;
 
-    try {
-      const response = await axiosInstance.post(`task-stage-user/assign-user`, { taskId, userId });
-      const updatedTaskStageUser = response.data;
+    const taskId = task?._id;
 
-      const taskStageUser = this.taskStageUsers.find((tsu) => tsu.task._id === taskId);
+    try {
+      const response = await axiosInstance.post(`task-stage-user/assign-user`, { task: taskId, user: userId });
+      const updatedTaskStageUser = await response.data;
+
+      const taskStageUser = this.taskStageUsers.find((tsu) => tsu.task === task?._id);
       if (taskStageUser) {
-        taskStageUser.user._id = updatedTaskStageUser.user;
+        taskStageUser.user._id = await updatedTaskStageUser.user;
       }
       this.success = true;
     } catch (error) {
@@ -141,7 +173,7 @@ export class TaskStore {
   };
 
   @action
-  moveTaskOptimistically = async (taskId: string, stageId: string, userId?: string) => {
+  moveTaskOptimistically = async (taskId: string, stageId: string) => {
     this.loading = true;
     this.error = null;
     this.success = false;
@@ -154,12 +186,9 @@ export class TaskStore {
         task.stage._id = stageId;
       }
 
-      const taskStageUser = this.taskStageUsers.find((tsu) => tsu.task._id === task?._id);
+      const taskStageUser = this.taskStageUsers.find((tsu) => tsu.task === task?._id);
       if (taskStageUser) {
         taskStageUser.stage._id = stageId;
-        if (userId) {
-          taskStageUser.user._id = userId;
-        }
       }
 
       this.success = true;
@@ -171,14 +200,13 @@ export class TaskStore {
   };
 
   @action
-  moveTask = async (taskId: string, stageId: string, userId: string | undefined) => {
-    console.log('moveTask: ', { taskId, stageId });
+  moveTask = async (taskId: string, stageId: string) => {
     this.loading = true;
     this.error = null;
     this.success = false;
 
     try {
-      await axiosInstance.patch(`task-stage-user/${taskId}`, { stageId: stageId, userId: userId });
+      await axiosInstance.patch(`task-stage-user/${taskId}`, { stage: stageId});
       this.success = true;
     } catch (error) {
       this.rollbackTaskStage();
@@ -199,19 +227,19 @@ export class TaskStore {
 
   @action
   getTasksByStage = (stageId: string | undefined) => {
-    //console.log('getTasksByStage: ', { tasks: this.tasks, stageId });
     return this.tasks.filter((task) => task.stage._id === stageId);
   };
 
   @action
-  getUserForTask = async (taskId: UniqueIdentifier) => {
+  getUserForTask = async (taskId: UniqueIdentifier): Promise<User | undefined> => {
     this.loading = true;
     this.error = null;
     this.success = false;
 
     try {
-      const response = await axiosInstance.get(`task-stage-user/user/${taskId}`);
-      this.user = response.data.user;
+      const response = await axiosInstance.get(`task-stage-user/${taskId}/user`);
+      console.log(response.data.user)
+      if (response) return response.data.user;
       this.success = true;
     } catch (error) {
       this.error = error.message;
@@ -219,4 +247,20 @@ export class TaskStore {
       this.loading = false;
     }
   };
+
+  @action
+  archiveTask = async (taskId: UniqueIdentifier, status: string) => {
+    this.loading = true;
+    this.error = null;
+    this.success = false;
+
+    try {
+      await axiosInstance.patch(`task/${taskId}/archive`, {status: status});
+      this.success = true;
+    } catch (error) {
+      this.error = error.message;
+    } finally {
+      this.loading = false;
+    }
+  }
 }

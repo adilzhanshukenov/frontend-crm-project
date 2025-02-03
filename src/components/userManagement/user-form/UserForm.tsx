@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
+import { Button, TextField } from '@mui/material';
 import { User, UserData } from '../../../stores/userStore/types';
 import './userform.css';
 import CancelButton from '../../shared/buttons/cancel-button/CancelButton';
 import rootStore from '../../../stores/rootStore/RootStore';
-import { Button, TextField } from '@mui/material';
 
 interface UserFormProps {
   user: User | null;
@@ -11,14 +11,15 @@ interface UserFormProps {
 
 const UserForm: React.FC<UserFormProps> = ({ user }) => {
   const { userStore, modalStore } = rootStore;
-  const [formData, setFormData] = useState<UserData>({ username: '', email: '', roles: [] });
+  const [formData, setFormData] = useState<UserData>({ username: '', email: '', name: '', surname: '' });
 
   useEffect(() => {
     if (user) {
       setFormData({
         username: user.username,
         email: user.email,
-        roles: user.roles,
+        name: user.name,
+        surname: user.surname,
       });
     }
   }, [user]);
@@ -48,7 +49,7 @@ const UserForm: React.FC<UserFormProps> = ({ user }) => {
 
       <TextField
         className="text-field"
-        variant="filled"
+        variant="outlined"
         type="text"
         label="Username"
         name="username"
@@ -58,18 +59,37 @@ const UserForm: React.FC<UserFormProps> = ({ user }) => {
 
       <TextField
         className="text-field"
-        variant="filled"
-        type="emil"
+        variant="outlined"
+        type="email"
         label="Email"
         name="email"
         value={formData.email}
         onChange={handleChange}
       />
-
-      <Button variant="contained" type="submit">
-        Update user
-      </Button>
-      <CancelButton onClick={() => userStore.fetchAllUsers()} />
+      <TextField
+        className="text-field"
+        variant="outlined"
+        type="text"
+        label="Name"
+        name="name"
+        value={formData.name}
+        onChange={handleChange}
+      />
+      <TextField
+        className="text-field"
+        variant="outlined"
+        type="text"
+        label="Surname"
+        name="surname"
+        value={formData.surname}
+        onChange={handleChange}
+      />
+      <div className="modal-buttons">
+        <Button variant="contained" type="submit">
+          Update user
+        </Button>
+        <CancelButton onClick={() => userStore.fetchAllUsers()} />
+      </div>
     </form>
   );
 };

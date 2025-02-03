@@ -25,7 +25,7 @@ export interface TaskData {
 }
 
 export interface TaskStageUser {
-  task: Task;
+  task: string;
   stage: Stage;
   user: User;
 }

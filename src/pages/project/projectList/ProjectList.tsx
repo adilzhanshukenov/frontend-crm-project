@@ -4,7 +4,6 @@ import { NavLink, useParams } from 'react-router-dom';
 import { Project } from '../../../stores/projectStore/types';
 import rootStore from '../../../stores/rootStore/RootStore';
 import './projectList.css';
-import { LinearProgress } from '@mui/material';
 
 const ProjectList: React.FC = observer(() => {
   const { projectStore } = rootStore;
@@ -15,14 +14,6 @@ const ProjectList: React.FC = observer(() => {
       projectStore.fetchProjectsOfCompany(companyId);
     }
   }, [companyId, projectStore]);
-
-  if (projectStore.loading) {
-    return (
-      <div style={{ width: '100%' }}>
-        <LinearProgress />
-      </div>
-    );
-  }
 
   if (projectStore.error) {
     return <div>Error: {projectStore.error}</div>;

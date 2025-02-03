@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import './createprojectform.css';
 import { observer } from 'mobx-react-lite';
@@ -19,6 +19,8 @@ const CreateProjectForm: React.FC = observer(() => {
   const { companyId } = useParams<{ companyId: string }>();
   const { projectStore, modalStore } = rootStore;
 
+  const firstInputRef = useRef<HTMLInputElement | null>(null);
+
   const [formData, setFormData] = useState<CreateProjectFormProps>({
     name: '',
     description: '',
@@ -30,6 +32,7 @@ const CreateProjectForm: React.FC = observer(() => {
 
   useEffect(() => {
     projectStore.fetchProjectsOfCompany(companyId);
+    firstInputRef.current?.focus();
   }, [companyId, projectStore]);
 
   const handleFormSubmit = async (e: FormEvent) => {
@@ -39,7 +42,6 @@ const CreateProjectForm: React.FC = observer(() => {
       start_date: new Date(formData.start_date),
       end_date: new Date(formData.end_date),
     };
-    console.log(converDatesFormData);
     await projectStore.addProject(converDatesFormData);
 
     projectStore.fetchProjectsOfCompany(companyId);
@@ -55,6 +57,7 @@ const CreateProjectForm: React.FC = observer(() => {
     <form className="modal-form" onSubmit={handleFormSubmit}>
       <h2>Create project</h2>
       <TextField
+        autoFocus
         value={formData.name}
         onChange={handleChange}
         name="name"
@@ -74,6 +77,7 @@ const CreateProjectForm: React.FC = observer(() => {
         type="text"
       />
       <TextField
+        slotProps={{ inputLabel: { shrink: true } }}
         value={formData.start_date}
         onChange={handleChange}
         name="start_date"
@@ -81,9 +85,10 @@ const CreateProjectForm: React.FC = observer(() => {
         placeholder="Choose start date"
         required={true}
         type="date"
-        variant="standard"
+        variant="outlined"
       />
       <TextField
+        slotProps={{ inputLabel: { shrink: true } }}
         value={formData.end_date}
         onChange={handleChange}
         name="end_date"
@@ -91,12 +96,14 @@ const CreateProjectForm: React.FC = observer(() => {
         placeholder="Choose end date"
         required={false}
         type="date"
-        variant="standard"
+        variant="outlined"
       />
-      <Button variant="contained" type="submit">
-        Create
-      </Button>
-      <CancelButton onClick={() => projectStore.fetchProjectsOfCompany(companyId)} />
+      <div className="modal-buttons">
+        <Button variant="contained" type="submit">
+          Create
+        </Button>
+        <CancelButton onClick={() => projectStore.fetchProjectsOfCompany(companyId)} />
+      </div>
     </form>
   );
 });

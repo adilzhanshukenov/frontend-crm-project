@@ -14,7 +14,6 @@ import StageComponent from '../../stageManagement/stage/StageComponent';
 import React, { useEffect, useState } from 'react';
 import { useRouteParams } from '../../../utils/useRouteParams';
 import { Task } from '../../../stores/taskStore/types';
-import { useAuth } from '../../../context/useAuth';
 import rootStore from '../../../stores/rootStore/RootStore';
 import TaskItem from '../task-item/TaskItem';
 import './taskboard.css';
@@ -22,7 +21,6 @@ import './taskboard.css';
 const TaskBoard: React.FC = observer(() => {
   const { projectId } = useRouteParams();
   const { taskStore, stageStore } = rootStore;
-  const { user } = useAuth();
   const [activeTask, setActiveTask] = useState<Task | null>(null);
   const sensors = useSensors(useSensor(PointerSensor), useSensor(KeyboardSensor));
 
@@ -45,9 +43,8 @@ const TaskBoard: React.FC = observer(() => {
 
     const taskId = active.id as string;
     const newStageId = over.id as string;
-    const userId = user?.userId ? user?.userId : undefined;
-    await taskStore.moveTaskOptimistically(taskId, newStageId, userId);
-    await taskStore.moveTask(taskId, newStageId, userId);
+    await taskStore.moveTaskOptimistically(taskId, newStageId);
+    await taskStore.moveTask(taskId, newStageId);
     await stageStore.fetchStagesOfProject(projectId);
     await taskStore.fetchAllTasks(projectId);
   };
@@ -56,8 +53,6 @@ const TaskBoard: React.FC = observer(() => {
     <DndContext sensors={sensors} collisionDetection={closestCenter} onDragStart={onDragStart} onDragEnd={onDragEnd}>
       <div className="task-board">
         {stageStore.projectStage?.map((projectStage) => {
-          // console.log(`TaskInStage: ${tasksInStage}`);
-          // console.log(`ProjectStage: ${projectStage}`);
           return <StageComponent key={projectStage._id} stage={projectStage.stage} />;
         })}
       </div>

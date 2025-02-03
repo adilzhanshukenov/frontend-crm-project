@@ -18,16 +18,24 @@
     color: black;
     transition: color 0.3s ease;
     cursor: pointer;
+    padding: 10px;
+    border-radius: 5px;
+    border: 2px solid var(--border-color);
 }
 
 .project-item:hover {
     color: #007bff;
+    border-color: #007bff;
+    border: 3px solid var(#007bff);
 }
 
 .project-item.active {
     font-weight: bold;
-    color: #4398f2;
-    border-bottom: 2px solid #007bff;
+    color: white;
+    border: 2px solid #007bff;
+    background-color: #007bff;
+    padding: 10px;
+    border-radius: 5px;
 }
 
 .project-item:focus {

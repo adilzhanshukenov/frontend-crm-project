@@ -76,11 +76,12 @@ const AddStageCompanyForm: React.FC<StageFormProps> = ({ stage }) => {
         name="description"
         onChange={handleChange}
       />
-
-      <Button variant="contained" type="submit">
-        {modalStore.mode === 'edit' ? 'Edit stage' : 'Add stage'}
-      </Button>
-      <CancelButton onClick={() => stageStore.fetchAllStages(companyId)} />
+      <div className="modal-buttons">
+        <Button variant="contained" type="submit">
+          {modalStore.mode === 'edit' ? 'Edit stage' : 'Add stage'}
+        </Button>
+        <CancelButton onClick={() => stageStore.fetchAllStages(companyId)} />
+      </div>
     </form>
   );
 };

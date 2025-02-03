@@ -17,11 +17,9 @@ export interface CompanyUser {
   _id?: string;
   user: User;
   company: Company;
-  position: string;
 }
 
 export interface CompanyUserFormData {
   user: string;
   company: string;
-  position: string;
 }

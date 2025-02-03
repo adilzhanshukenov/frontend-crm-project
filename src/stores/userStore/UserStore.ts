@@ -116,7 +116,6 @@ export class UserStore {
   checkUserExists = async (username: string) => {
     try {
       const response = await axiosInstance.get(`/user/exists?username=${username}`);
-      console.log(response.data);
       this.userExists = response.data.exists;
     } catch (error) {
       this.error = error;
@@ -133,7 +132,6 @@ export class UserStore {
   findUserByName = async (username: string) => {
     try {
       const response = await axiosInstance.get(`/user/byusername/${username}`);
-      console.log(response.data);
       this.selectedUser = response.data._id;
     } catch (error) {
       this.error = error;

@@ -11,6 +11,8 @@
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
+    background-color: var(--main-back-color);
+    z-index: 60;
 }
 
 .company-sidebar-bottom {

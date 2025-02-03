@@ -5,7 +5,8 @@ import { useRouteParams } from '../../../utils/useRouteParams';
 import CancelButton from '../../shared/buttons/cancel-button/CancelButton';
 import { ProjectUserData } from '../../../stores/projectStore/types';
 import rootStore from '../../../stores/rootStore/RootStore';
-import { Button, MenuItem, Select, SelectChangeEvent } from '@mui/material';
+import { Button, MenuItem, SelectChangeEvent } from '@mui/material';
+import SelectComponent from '../../shared/select/SelectComponent';
 
 const AddUserToProjectForm: React.FC = observer(() => {
   const { projectId, companyId } = useRouteParams();
@@ -27,6 +28,7 @@ const AddUserToProjectForm: React.FC = observer(() => {
   const handleFormSubmit = async (e: FormEvent) => {
     e.preventDefault();
     await projectStore.addUserToProject(formData);
+    await projectStore.fetchUsersOfProject(projectId);
     modalStore.closeModal();
   };
 
@@ -58,38 +60,42 @@ const AddUserToProjectForm: React.FC = observer(() => {
   return (
     <form className="modal-form" onSubmit={handleFormSubmit}>
       <h2>Add user to project</h2>
-      <Select
+
+      <SelectComponent
+        title="User"
         label="User"
-        value={formData.user}
         name="user"
+        value={formData.user}
         onChange={handleChange}
-        sx={{
-          '& .MuiInputLabel-root': {
-            color: 'black', // Optional, in case nested styling is needed
-          },
-        }}
-      >
-        <MenuItem disabled value="">
-          Select user
-        </MenuItem>
-        {userList}
-      </Select>
-      <Select label="Position" value={formData.position} name="position" onChange={handleChange}>
-        <MenuItem disabled value="">
-          Select position
-        </MenuItem>
-        {positionList}
-      </Select>
-      <Select label="Role" value={formData.role} name="role" onChange={handleChange}>
-        <MenuItem disabled value="">
-          Select role
-        </MenuItem>
-        {roleList}
-      </Select>
-      <Button type="submit" variant="contained">
-        Add user
-      </Button>
-      <CancelButton onClick={() => projectStore.fetchUsersOfProject(projectId)} />
+        items={userList}
+        placeholder="Select user"
+      />
+
+      <SelectComponent
+        title="Position"
+        label="Position"
+        name="position"
+        value={formData.position}
+        onChange={handleChange}
+        items={positionList}
+        placeholder=" Select position"
+      />
+
+      <SelectComponent
+        title="Role"
+        label="Role"
+        name="role"
+        value={formData.role}
+        onChange={handleChange}
+        items={roleList}
+        placeholder="  Select role"
+      />
+      <div className="modal-buttons">
+        <Button type="submit" variant="contained">
+          Add user
+        </Button>
+        <CancelButton onClick={() => projectStore.fetchUsersOfProject(projectId)} />
+      </div>
     </form>
   );
 });
